@@ -17,7 +17,8 @@ include $(DEVKITPRO)/wut/share/wut_rules
 # DATA is a list of directories containing data files
 # INCLUDES is a list of directories containing header files
 #-------------------------------------------------------------------------------
-TARGET		:=	$(notdir $(CURDIR))
+# TARGET		:=	$(notdir $(CURDIR))
+TARGET		:=	themiify
 BUILD		:=	build
 SOURCES		:=	src
 DATA		:=	data
