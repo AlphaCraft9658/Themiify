@@ -5,3 +5,10 @@
 1698713038249.png
 *.elf
 *.rpx
+docker-compose.yaml
+*.excalidraw
+Themiify logic.svg
+brush-solid.svg
+palette-solid.svg
+build
+bps_patcher.zip
