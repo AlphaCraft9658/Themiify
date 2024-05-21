@@ -88,14 +88,14 @@ int main(int argc, char **argv)
         WHBLogPrintf("Patch applied successfully\n");
 
         // Write the patch file and test it out haha
-        std::FILE* outputFile = std::fopen("fs:/vol/external01/patch_files/men_packed.pack", "wb");
+        std::FILE* outputFile = std::fopen("fs:/vol/external01/patch_files/Men-patched.pack", "wb");
         if (!outputFile) {
-            WHBLogPrintf("Failed to open output file: men_packed.pack\n");
+            WHBLogPrintf("Failed to open output file: Men-patched.pack\n");
             return -1;
         }
 
         if (std::fwrite(bytes.data(), 1, bytes.size(), outputFile) != bytes.size()) {
-            WHBLogPrintf("Failed to write to output file: men_packed.pack\n");
+            WHBLogPrintf("Failed to write to output file: Men-patched.pack\n");
             std::fclose(outputFile);
             return -1;
         }
