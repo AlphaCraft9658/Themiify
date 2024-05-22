@@ -10,6 +10,16 @@
 #include <memory>
 #include <vector>
 
+int error() {
+    while (WHBProcIsRunning()) {
+            WHBLogConsoleDraw();
+    }
+    WHBLogConsoleFree();
+    WHBLogUdpDeinit();
+    WHBProcShutdown();
+    return -1;
+}
+
 int main(int argc, char **argv)
 {
     WHBProcInit();
@@ -27,7 +37,7 @@ int main(int argc, char **argv)
     std::FILE* inputFile = std::fopen(inputPath, "rb");
     if (!inputFile) {
         WHBLogPrintf("Failed to open input file: %s\n", inputPath);
-        return -1;
+        return error();
     }
 
     // Open the patch file
@@ -35,7 +45,7 @@ int main(int argc, char **argv)
     if (!patchFile) {
         WHBLogPrintf("Failed to open patch file: %s\n", patchPath);
         std::fclose(inputFile);
-        return -1;
+        return error();
     }
 
     // Get the size of the input file
@@ -56,14 +66,14 @@ int main(int argc, char **argv)
         WHBLogPrintf("Failed to read input file.\n");
         std::fclose(inputFile);
         std::fclose(patchFile);
-        return -1;
+        return error();
     }
 
     if (std::fread(patchData.data(), 1, patchSize, patchFile) != patchSize) {
         WHBLogPrintf("Failed to read patch file.\n");
         std::fclose(inputFile);
         std::fclose(patchFile);
-        return -1;
+        return error();
     }
 
     std::fclose(inputFile);
@@ -80,7 +90,7 @@ int main(int argc, char **argv)
         patchType = Hips::PatchType::BPS;
     } else {
         WHBLogPrintf("Unknown patch format\n");
-        return -1;
+        return error();
     }
 
     auto [bytes, result] = Hips::patch(inputData.data(), inputSize, patchData.data(), patchSize, patchType);
@@ -91,13 +101,13 @@ int main(int argc, char **argv)
         std::FILE* outputFile = std::fopen("fs:/vol/external01/patch_files/Men-patched.pack", "wb");
         if (!outputFile) {
             WHBLogPrintf("Failed to open output file: Men-patched.pack\n");
-            return -1;
+            return error();
         }
 
         if (std::fwrite(bytes.data(), 1, bytes.size(), outputFile) != bytes.size()) {
             WHBLogPrintf("Failed to write to output file: Men-patched.pack\n");
             std::fclose(outputFile);
-            return -1;
+            return error();
         }
 
         std::fclose(outputFile);
