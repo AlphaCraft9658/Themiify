@@ -2,6 +2,7 @@
 #include <whb/log.h>
 #include <whb/log_udp.h>
 #include <whb/log_console.h>
+#include <sysapp/title.h>
 #include "hips.hpp"
 #include <cstdint>
 #include <cstdio>
@@ -25,6 +26,22 @@ int main(int argc, char **argv)
     WHBProcInit();
     WHBLogUdpInit();
     WHBLogConsoleInit();
+
+    uint64_t menuID = _SYSGetSystemApplicationTitleId(SYSTEM_APP_ID_WII_U_MENU);  // Retrieve the Wii U system menu titleID
+    // Convert the uint64_t menuID into a char array
+    char menuIDString[17];
+    snprintf(menuIDString, 17, "%016llx", menuID);  // Write the titleID of the Wii U system menu to a string/character array
+
+    // Generate and store the path of the content directory of the Wii U system menu both for sdcafiine and the system
+    std::string sdcafiineContentFolder = menuIDString;
+    sdcafiineContentFolder = "fs:/vol/external01/wiiu/sdcafiine/" + sdcafiineContentFolder.substr(0, 8) + "/" + sdcafiineContentFolder.substr(8, 8) + "/content/";
+    std::string systemContentFolder = menuIDString;
+    systemContentFolder = "storage_mlc:/sys/title/" + systemContentFolder.substr(0, 8) + "/" + systemContentFolder.substr(8, 8) + "/content/";
+
+    // Print those directories and the menu titleID for debugging purposes
+    WHBLogPrintf("Wii U system menu titleID: %016hhs", menuIDString);
+    WHBLogPrintf(sdcafiineContentFolder.c_str());
+    WHBLogPrintf(systemContentFolder.c_str());
 
     
     // Retrieve the paths of the input file and the patch file
