@@ -26,7 +26,6 @@ int main(int argc, char **argv)
     WHBLogUdpInit();
     WHBLogConsoleInit();
 
-    WHBLogPrintf("Hello World!");
     
     // Retrieve the paths of the input file and the patch file
     // Lil disclaimer, fs:/vol/external01/ is the path to the root of the sd card
