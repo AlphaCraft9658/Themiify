@@ -113,7 +113,7 @@ int main(int argc, char **argv)
     if (result == Hips::Result::Success) {
         WHBLogPrintf("Patch applied successfully");
         WHBLogPrintf("Writing file, please wait...");
-        WHBLogPrintf("(your console isn't frozen in this case!)");
+        WHBLogPrintf("(Your console isn't frozen in this case!)");
         WHBLogConsoleDraw();
 
         // Write the patch file and test it out haha
