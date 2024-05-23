@@ -5,3 +5,9 @@ A new WIP theme manager for the Wii U console
 
 ## Idea
 This theme manager will be available as a .wuhb file and utilize SDCafiine for applying themes. There is a planned patch to add a feature to SDCafiine to better auto-load modpacks or themes in this case.
+
+## Clone the repository
+In order to clone the repository for compiling or contributin you will need to run the following command:
+```
+git clone --recurse-submodules https://github.com/AlphaCraft9658/Themiify
+```
