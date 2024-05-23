@@ -65,30 +65,34 @@ int main(int argc, char **argv)
     // Open input file 1
     std::FILE* inputFile = std::fopen(inputPath.c_str(), "rb");
     if (!inputFile) {
-        WHBLogPrintf("Failed to open input file: %s\n", inputPath);
+        WHBLogPrintf("Failed to open input file: %s\n", inputPath.c_str());
         return error();
     }
 
     // Open input file 2
     std::FILE* inputFile2 = std::fopen(inputPath2.c_str(), "rb");
     if (!inputFile2) {
-        WHBLogPrintf("Failed to open input file: %s\n", inputPath2);
+        WHBLogPrintf("Failed to open input file: %s\n", inputPath2.c_str());
+        std::fclose(inputFile);
         return error();
     }
 
     // Open patch file 1
     std::FILE* patchFile = std::fopen(patchPath.c_str(), "rb");
     if (!patchFile) {
-        WHBLogPrintf("Failed to open patch file: %s\n", patchPath);
+        WHBLogPrintf("Failed to open patch file: %s\n", patchPath.c_str());
         std::fclose(inputFile);
+        std::fclose(inputFile2);
         return error();
     }
 
     // Open patch file 2
     std::FILE* patchFile2 = std::fopen(patchPath2.c_str(), "rb");
     if (!patchFile2) {
-        WHBLogPrintf("Failed to open patch file: %s\n", patchPath2);
+        WHBLogPrintf("Failed to open patch file: %s\n", patchPath2.c_str());
+        std::fclose(inputFile);
         std::fclose(inputFile2);
+        std::fclose(patchFile);
         return error();
     }
 
