@@ -5,6 +5,7 @@
 #include <sysapp/title.h>
 #include <mocha/mocha.h>
 #include <sysapp/launch.h>
+#include <vpad/input.h>
 #include "hips.hpp"
 #include <cstdint>
 #include <cstdio>
@@ -23,6 +24,8 @@ int main(int argc, char **argv)
     WHBLogUdpInit();
     WHBLogConsoleInit();
     Mocha_InitLibrary();
+    VPADInit();
+    VPADStatus vpadStatusBuff[1];
 
     // Mount storage_mlc
     // NOTE: storage_mlc is the system mlc_storage where the system menu as well as other system titles are located
@@ -114,6 +117,7 @@ int main(int argc, char **argv)
         WHBLogPrintf("Patch applied successfully");
         WHBLogPrintf("Writing file, please wait...");
         WHBLogPrintf("(Your console isn't frozen in this case!)");
+        WHBLogPrintf("");
         WHBLogConsoleDraw();
 
         // Write the patch file and test it out haha
@@ -130,12 +134,14 @@ int main(int argc, char **argv)
         }
 
         std::fclose(outputFile);
-        WHBLogPrintf("Done!");
+        WHBLogPrintf("Patch succeeded! (Press A to close)");
     } else {
         WHBLogPrintf("Patching failed :(\n");
     }
 
     while (WHBProcIsRunning()) {
+        VPADRead(VPAD_CHAN_0, vpadStatusBuff, 1, NULL);
+        if (vpadStatusBuff[0].trigger == VPAD_BUTTON_A) SYSLaunchMenu();
         WHBLogConsoleDraw();
     }
 
