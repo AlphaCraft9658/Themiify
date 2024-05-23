@@ -4,6 +4,7 @@
 #include <whb/log_console.h>
 #include <sysapp/title.h>
 #include <mocha/mocha.h>
+#include <sysapp/launch.h>
 #include "hips.hpp"
 #include <cstdint>
 #include <cstdio>
@@ -12,15 +13,8 @@
 #include <memory>
 #include <vector>
 
-int error() {
-    while (WHBProcIsRunning()) {
-            WHBLogConsoleDraw();
-    }
-    Mocha_UnmountFS("storage_mlc");
-    WHBLogConsoleFree();
-    WHBLogUdpDeinit();
-    WHBProcShutdown();
-    return -1;
+void error() {
+    SYSLaunchMenu();
 }
 
 int main(int argc, char **argv)
@@ -36,64 +30,49 @@ int main(int argc, char **argv)
     Mocha_MountFS("storage_mlc", "/dev/mlc01", "/vol/storage_mlc");
 
     uint64_t menuID = _SYSGetSystemApplicationTitleId(SYSTEM_APP_ID_WII_U_MENU);  // Retrieve the Wii U system menu titleID
-    // Convert the uint64_t menuID into a char array
-    char menuIDString[17];
-    snprintf(menuIDString, 17, "%016llx", menuID);  // Write the titleID of the Wii U system menu to a string/character array
+    
+    uint32_t upper = (uint32_t)(menuID >> 32);
+    uint32_t lower = (uint32_t)menuID;
 
-    // Generate and store the path of the content directory of the Wii U system menu both for sdcafiine and the system
-    std::string sdcafiineContentFolder = menuIDString;
-    sdcafiineContentFolder = "fs:/vol/external01/wiiu/sdcafiine/" + sdcafiineContentFolder.substr(0, 8) + "/" + sdcafiineContentFolder.substr(8, 8) + "/content";
-    std::string systemContentFolder = menuIDString;
-    systemContentFolder = "storage_mlc:/sys/title/" + systemContentFolder.substr(0, 8) + "/" + systemContentFolder.substr(8, 8) + "/content";
+    char menuIDStr[17];
+    snprintf(menuIDStr, sizeof(menuIDStr), "%016llx", menuID);
 
-    // Print those directories and the menu titleID for debugging purposes
-    WHBLogPrintf("Wii U system menu titleID: %016hhs", menuIDString);
-    WHBLogPrintf(sdcafiineContentFolder.c_str());
-    WHBLogPrintf(systemContentFolder.c_str());
+    char splitMenuID[18];
+    snprintf(splitMenuID, sizeof(splitMenuID), "%08x/%08x", upper, lower);
 
+    // Testing for now - Nathaniel
+    // Minor modifications by AlphaCraft9658
+    std::string modpacksRoot = "fs:/vol/external01/wiiu/sdcafiine/" + std::string(menuIDStr) + "/";  // Will later be used for getting modpack paths, which depend on the theme name
+    std::string modPath = modpacksRoot + "test_modpack/";
+    std::string menuContentPath = "storage_mlc:/sys/title/" + std::string(splitMenuID) + "content";
+
+    // temp stuff till we implement more than one file patching - Nathaniel
+    std::string inputPath = menuContentPath + "/Common/Package/Men.pack"; // Gonna read from the NAND now like a big boy - Nathaniel
+    std::string patchPath = "fs:/vol/external01/patch_files/Men.bps";
+    // NOTE: until we implement recursive file writing ur gonna have to manually create this directory - Nathaniel
+    // So sd:/wiiu/sdcafiine/(title ID)/test_modpack/content/Common/Package - Nathaniel
+    std::string outputPath = modPath + "/content/Common/Package/Men.pack"; // Hopefully this gives you an idea of how this is gonna work - Nathaniel
+
+    // I'm great at menu design :D - Nathaniel
+    WHBLogPrintf("Themiify");
+    WHBLogPrintf("-----------------------------------------------------");
+    WHBLogPrintf("Installed Wii U Menu title ID: %s", menuIDStr);
 
     // Retrieve the paths of the input file and the patch file
     // Lil disclaimer, fs:/vol/external01/ is the path to the root of the sd card
-    // const char* internalMenPath = (systemContentFolder + "/Common/Package/Men.pack").c_str();
-    // const char* inputPath = "fs:/vol/external01/patch_files/Men.pack";
-    // const char* inputPath = std::string(systemContentFolder + "/Common/Package/Men.pack").c_str();
-    std::string inputPath = systemContentFolder + "/Common/Package/Men.pack";
-    std::string patchPath = "fs:/vol/external01/patch_files/Men.bps";
-    std::string inputPath2 = systemContentFolder + "/Common/Package/Men2.pack";
-    std::string patchPath2 = "fs:/vol/external01/patch_files/Men2.bps";
-
-    // Open input file 1
+    // Open input file
     std::FILE* inputFile = std::fopen(inputPath.c_str(), "rb");
     if (!inputFile) {
         WHBLogPrintf("Failed to open input file: %s\n", inputPath.c_str());
-        return error();
+        error();
     }
 
-    // Open input file 2
-    std::FILE* inputFile2 = std::fopen(inputPath2.c_str(), "rb");
-    if (!inputFile2) {
-        WHBLogPrintf("Failed to open input file: %s\n", inputPath2.c_str());
-        std::fclose(inputFile);
-        return error();
-    }
-
-    // Open patch file 1
+    // Open patch file
     std::FILE* patchFile = std::fopen(patchPath.c_str(), "rb");
     if (!patchFile) {
         WHBLogPrintf("Failed to open patch file: %s\n", patchPath.c_str());
         std::fclose(inputFile);
-        std::fclose(inputFile2);
-        return error();
-    }
-
-    // Open patch file 2
-    std::FILE* patchFile2 = std::fopen(patchPath2.c_str(), "rb");
-    if (!patchFile2) {
-        WHBLogPrintf("Failed to open patch file: %s\n", patchPath2.c_str());
-        std::fclose(inputFile);
-        std::fclose(inputFile2);
-        std::fclose(patchFile);
-        return error();
+        error();
     }
 
     // Get the size of the input file
@@ -114,14 +93,14 @@ int main(int argc, char **argv)
         WHBLogPrintf("Failed to read input file.\n");
         std::fclose(inputFile);
         std::fclose(patchFile);
-        return error();
+        error();
     }
 
     if (std::fread(patchData.data(), 1, patchSize, patchFile) != patchSize) {
         WHBLogPrintf("Failed to read patch file.\n");
         std::fclose(inputFile);
         std::fclose(patchFile);
-        return error();
+        error();
     }
 
     std::fclose(inputFile);
@@ -141,13 +120,13 @@ int main(int argc, char **argv)
         std::FILE* outputFile = std::fopen(outputPath.c_str(), "wb");
         if (!outputFile) {
             WHBLogPrintf("Failed to open output file: Men-patched.pack\n");
-            return error();
+            error();
         }
 
         if (std::fwrite(bytes.data(), 1, bytes.size(), outputFile) != bytes.size()) {
             WHBLogPrintf("Failed to write to output file: Men-patched.pack\n");
             std::fclose(outputFile);
-            return error();
+            error();
         }
 
         std::fclose(outputFile);
