@@ -44,7 +44,7 @@ int main(int argc, char **argv)
     // Minor modifications by AlphaCraft9658
     std::string modpacksRoot = "fs:/vol/external01/wiiu/sdcafiine/" + std::string(menuIDStr) + "/";  // Will later be used for getting modpack paths, which depend on the theme name
     std::string modPath = modpacksRoot + "test_modpack/";
-    std::string menuContentPath = "storage_mlc:/sys/title/" + std::string(splitMenuID) + "content";
+    std::string menuContentPath = "storage_mlc:/sys/title/" + std::string(splitMenuID) + "/content";
 
     // temp stuff till we implement more than one file patching - Nathaniel
     std::string inputPath = menuContentPath + "/Common/Package/Men.pack"; // Gonna read from the NAND now like a big boy - Nathaniel
