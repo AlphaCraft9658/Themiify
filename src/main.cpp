@@ -129,21 +129,10 @@ int main(int argc, char **argv)
 
     Hips::PatchType patchType;
     std::string extension = patchPath;
-    // This stuff isn't necesarry cuz it'll always be bps but rn I totally just copied this from the og example lmfao
-    if (extension.size() >= 4 && extension.substr(extension.size() - 4) == ".ips") {
-        patchType = Hips::PatchType::IPS;
-    } else if (extension.size() >= 4 && extension.substr(extension.size() - 4) == ".ups") {
-        patchType = Hips::PatchType::UPS;
-    } else if (extension.size() >= 4 && extension.substr(extension.size() - 4) == ".bps") {
-        patchType = Hips::PatchType::BPS;
-    } else {
-        WHBLogPrintf("Unknown patch format\n");
-        return error();
-    }
 
-    auto [bytes, result] = Hips::patch(inputData.data(), inputSize, patchData.data(), patchSize, patchType);
+    auto [bytes, result] = Hips::patch(inputData.data(), inputSize, patchData.data(), patchSize, Hips::PatchType::BPS);
     if (result == Hips::Result::Success) {
-        WHBLogPrintf("Patch applied successfully\n");
+        WHBLogPrintf("Patch applied successfully");
         WHBLogPrintf("Writing file, please wait...");
         WHBLogPrintf("(your console isn't frozen in this case!)");
         WHBLogConsoleDraw();
