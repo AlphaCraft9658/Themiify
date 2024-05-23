@@ -51,7 +51,7 @@ int main(int argc, char **argv)
     WHBLogPrintf(sdcafiineContentFolder.c_str());
     WHBLogPrintf(systemContentFolder.c_str());
 
-    
+
     // Retrieve the paths of the input file and the patch file
     // Lil disclaimer, fs:/vol/external01/ is the path to the root of the sd card
     // const char* internalMenPath = (systemContentFolder + "/Common/Package/Men.pack").c_str();
@@ -59,19 +59,36 @@ int main(int argc, char **argv)
     // const char* inputPath = std::string(systemContentFolder + "/Common/Package/Men.pack").c_str();
     std::string inputPath = systemContentFolder + "/Common/Package/Men.pack";
     std::string patchPath = "fs:/vol/external01/patch_files/Men.bps";
+    std::string inputPath2 = systemContentFolder + "/Common/Package/Men2.pack";
+    std::string patchPath2 = "fs:/vol/external01/patch_files/Men2.bps";
 
-    // Open the input file
+    // Open input file 1
     std::FILE* inputFile = std::fopen(inputPath.c_str(), "rb");
     if (!inputFile) {
         WHBLogPrintf("Failed to open input file: %s\n", inputPath);
         return error();
     }
 
-    // Open the patch file
+    // Open input file 2
+    std::FILE* inputFile2 = std::fopen(inputPath2.c_str(), "rb");
+    if (!inputFile2) {
+        WHBLogPrintf("Failed to open input file: %s\n", inputPath2);
+        return error();
+    }
+
+    // Open patch file 1
     std::FILE* patchFile = std::fopen(patchPath.c_str(), "rb");
     if (!patchFile) {
         WHBLogPrintf("Failed to open patch file: %s\n", patchPath);
         std::fclose(inputFile);
+        return error();
+    }
+
+    // Open patch file 2
+    std::FILE* patchFile2 = std::fopen(patchPath2.c_str(), "rb");
+    if (!patchFile2) {
+        WHBLogPrintf("Failed to open patch file: %s\n", patchPath2);
+        std::fclose(inputFile2);
         return error();
     }
 
