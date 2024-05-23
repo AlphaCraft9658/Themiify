@@ -138,7 +138,7 @@ int main(int argc, char **argv)
         WHBLogConsoleDraw();
 
         // Write the patch file and test it out haha
-        std::FILE* outputFile = std::fopen("fs:/vol/external01/patch_files/Men-patched.pack", "wb");
+        std::FILE* outputFile = std::fopen(outputPath.c_str(), "wb");
         if (!outputFile) {
             WHBLogPrintf("Failed to open output file: Men-patched.pack\n");
             return error();
