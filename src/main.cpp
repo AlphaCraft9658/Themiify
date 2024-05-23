@@ -31,14 +31,14 @@ int main(int argc, char **argv)
 
     uint64_t menuID = _SYSGetSystemApplicationTitleId(SYSTEM_APP_ID_WII_U_MENU);  // Retrieve the Wii U system menu titleID
     
-    uint32_t upper = (uint32_t)(menuID >> 32);
-    uint32_t lower = (uint32_t)menuID;
+    uint32_t menuIDParentDir = (uint32_t)(menuID >> 32);
+    uint32_t menuIDChildDir = (uint32_t)menuID;
 
     char menuIDStr[17];
     snprintf(menuIDStr, sizeof(menuIDStr), "%016llx", menuID);
 
     char splitMenuID[18];
-    snprintf(splitMenuID, sizeof(splitMenuID), "%08x/%08x", upper, lower);
+    snprintf(splitMenuID, sizeof(splitMenuID), "%08x/%08x", menuIDParentDir, menuIDChildDir);
 
     // Testing for now - Nathaniel
     // Minor modifications by AlphaCraft9658
