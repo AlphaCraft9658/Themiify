@@ -30,7 +30,7 @@ int main(int argc, char **argv)
     // Mount storage_mlc
     // NOTE: storage_mlc is the system mlc_storage where the system menu as well as other system titles are located
     //       it could be risky when not handled properly, because wrong commands may override important system files.
-    Mocha_MountFS("storage_mlc", "/dev/mlc01", "/vol/storage_mlc");
+    Mocha_MountFS("storage_mlc", nullptr, "/vol/storage_mlc01");
 
     uint64_t menuID = _SYSGetSystemApplicationTitleId(SYSTEM_APP_ID_WII_U_MENU);  // Retrieve the Wii U system menu titleID
     
