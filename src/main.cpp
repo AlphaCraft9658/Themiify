@@ -19,6 +19,10 @@ void error() {
     SYSLaunchMenu();
 }
 
+bool create_filepath(std::string filepath) {
+        return std::filesystem::create_directories(filepath);
+}
+
 int main(int argc, char **argv)
 {
     WHBProcInit();
@@ -57,7 +61,7 @@ int main(int argc, char **argv)
     // So sd:/wiiu/sdcafiine/(title ID)/test_modpack/content/Common/Package - Nathaniel
     // Recursive directory structure creation done (the basics) :D - AlphaCraft9658
     std::string outputPath = modPath + "/content/Common/Package/Men.pack"; // Hopefully this gives you an idea of how this is gonna work - Nathaniel
-    std::filesystem::create_directories(modPath + "/content/Common/Package");
+    create_filepath(modPath + "/content/Common/Package");
 
     // I'm great at menu design :D - Nathaniel
     WHBLogPrintf("Themiify");
