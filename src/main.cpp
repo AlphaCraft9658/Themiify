@@ -13,6 +13,7 @@
 #include <iostream>
 #include <memory>
 #include <vector>
+#include <filesystem>
 
 void error() {
     SYSLaunchMenu();
@@ -54,7 +55,9 @@ int main(int argc, char **argv)
     std::string patchPath = "fs:/vol/external01/patch_files/Men.bps";
     // NOTE: until we implement recursive file writing ur gonna have to manually create this directory - Nathaniel
     // So sd:/wiiu/sdcafiine/(title ID)/test_modpack/content/Common/Package - Nathaniel
+    // Recursive directory structure creation done (the basics) :D - AlphaCraft9658
     std::string outputPath = modPath + "/content/Common/Package/Men.pack"; // Hopefully this gives you an idea of how this is gonna work - Nathaniel
+    std::filesystem::create_directories(modPath + "/content/Common/Package");
 
     // I'm great at menu design :D - Nathaniel
     WHBLogPrintf("Themiify");
