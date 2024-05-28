@@ -14,3 +14,6 @@ build
 bps_patcher.zip
 themiify.lst
 BochiBPS.zip
+bashrc
+devcontainer_dockerfile
+devcontainer-compose.yaml
