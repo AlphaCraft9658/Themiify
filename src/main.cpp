@@ -28,6 +28,7 @@ int main(int argc, char **argv)
     WHBProcInit();
     WHBLogUdpInit();
     WHBLogConsoleInit();
+    WHBLogConsoleSetColor(0x000000);
     Mocha_InitLibrary();
     VPADInit();
     VPADStatus vpadStatusBuff[1];
