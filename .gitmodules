@@ -1,6 +1,6 @@
 [submodule "libmocha"]
 	path = libmocha
 	url = https://github.com/wiiu-env/libmocha
-[submodule "rapidjson"]
-	path = rapidjson
-	url = https://github.com/Tencent/rapidjson
+[submodule "jsoncpp"]
+	path = jsoncpp
+	url = https://github.com/open-source-parsers/jsoncpp
