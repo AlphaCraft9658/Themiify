@@ -6,6 +6,7 @@
 #include <mocha/mocha.h>
 #include <sysapp/launch.h>
 #include <vpad/input.h>
+#include <json/json.h>
 #include "hips.hpp"
 #include <cstdint>
 #include <cstdio>
