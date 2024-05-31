@@ -129,6 +129,9 @@ int main(int argc, char **argv)
     Hips::PatchType patchType;
     std::string extension = patchPath;
 
+    WHBLogPrintf("Patching file, please wait...");
+    WHBLogConsoleDraw();
+
     auto [bytes, result] = Hips::patch(inputData.data(), inputSize, patchData.data(), patchSize, Hips::PatchType::BPS);
     if (result == Hips::Result::Success) {
         WHBLogPrintf("Patch applied successfully");
