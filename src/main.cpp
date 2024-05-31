@@ -52,14 +52,23 @@ int main(int argc, char **argv)
     // Testing for now - Nathaniel
     // Minor modifications by AlphaCraft9658
     std::string modpacksRoot = "fs:/vol/external01/wiiu/sdcafiine/" + std::string(menuIDStr) + "/";  // Will later be used for getting modpack paths, which depend on the theme name
-    std::string modPath = modpacksRoot + "test_modpack/";
-    std::string menuContentPath = "storage_mlc:/sys/title/" + std::string(splitMenuID) + "/content";
+    std::string modPath = modpacksRoot + "test_theme/";
+    std::string menuContentPath = "storage_mlc:/sys/title/" + std::string(splitMenuID) + "/content/";
+
+    // Themiify resource directories
+    std::string themiifyRoot = "fs:/vol/external01/wiiu/themiify/";
+    std::string themiifyTmp = themiifyRoot + "tmp/";
+    create_filepath(themiifyTmp);
+    std::string themesPath = themiifyRoot + "themes/";
+
+    std::string themeID = "test_theme";
+    std::string themePath = themesPath + themeID + "/";
 
     // temp stuff till we implement more than one file patching - Nathaniel
-    std::string inputPath = menuContentPath + "/Common/Package/Men.pack"; // Gonna read from the NAND now like a big boy - Nathaniel
-    std::string patchPath = "fs:/vol/external01/patch_files/Men.bps";
+    std::string inputPath = menuContentPath + "Common/Package/Men.pack"; // Gonna read from the NAND now like a big boy - Nathaniel
+    std::string patchPath = themePath + "Men.bps";
     // NOTE: until we implement recursive file writing ur gonna have to manually create this directory - Nathaniel
-    // So sd:/wiiu/sdcafiine/(title ID)/test_modpack/content/Common/Package - Nathaniel
+    // So sd:/wiiu/sdcafiine/(title ID)/test_theme/content/Common/Package - Nathaniel
     // Recursive directory structure creation done (the basics) :D - AlphaCraft9658
     std::string outputPath = modPath + "/content/Common/Package/Men.pack"; // Hopefully this gives you an idea of how this is gonna work - Nathaniel
     create_filepath(modPath + "/content/Common/Package");
