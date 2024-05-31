@@ -11,3 +11,6 @@ In order to clone the repository for compiling or contributing you will need to 
 ```
 git clone --recurse-submodules https://github.com/AlphaCraft9658/Themiify
 ```
+
+### TODO
+Building container and building instructions
