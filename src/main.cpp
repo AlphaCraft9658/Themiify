@@ -6,7 +6,7 @@
 #include <mocha/mocha.h>
 #include <sysapp/launch.h>
 #include <vpad/input.h>
-// #include <json/json.h>
+#include <nlohmann/json.hpp>
 #include "hips.hpp"
 #include <cstdint>
 #include <cstdio>
@@ -15,6 +15,7 @@
 #include <memory>
 #include <vector>
 #include <filesystem>
+namespace json = nlohmann;
 
 void error() {
     SYSLaunchMenu();
@@ -72,7 +73,7 @@ int main(int argc, char **argv)
     // Testing for now - Nathaniel
     // Minor modifications by AlphaCraft9658
     std::string modpacksRoot = "fs:/vol/external01/wiiu/sdcafiine/" + std::string(menuIDStr) + "/";  // Will later be used for getting modpack paths, which depend on the theme name
-    std::string modPath = modpacksRoot + "test_theme/";
+    std::string modPath = modpacksRoot + "themiify/";
     std::string menuContentPath = "storage_mlc:/sys/title/" + std::string(splitMenuID) + "/content/";
 
     // Themiify resource directories
@@ -81,8 +82,8 @@ int main(int argc, char **argv)
     create_filepath(themiifyTmp);
     std::string themesPath = themiifyRoot + "themes/";
 
-    std::string themeID = "test_theme";
-    std::string themePath = themesPath + themeID + "/";
+    std::string themeID;
+    std::string themePath = themesPath + "test_theme" + "/";
 
     // Json::Value themeMeta;
     // std::ifstream themeMetaFileStream(themePath + "test_theme.json");
@@ -93,103 +94,144 @@ int main(int argc, char **argv)
     // WHBLogPrintf("----- Json Test End -----");
     // WHBLogConsoleDraw();
 
-    
-
-    // temp stuff till we implement more than one file patching - Nathaniel
-    std::string inputPath = menuContentPath + "Common/Package/Men.pack"; // Gonna read from the NAND now like a big boy - Nathaniel
-    std::string patchPath = themePath + "Men.bps";
-    // NOTE: until we implement recursive file writing ur gonna have to manually create this directory - Nathaniel
-    // So sd:/wiiu/sdcafiine/(title ID)/test_theme/content/Common/Package - Nathaniel
-    // Recursive directory structure creation done (the basics) :D - AlphaCraft9658
-    std::string outputPath = modPath + "/content/Common/Package/Men.pack"; // Hopefully this gives you an idea of how this is gonna work - Nathaniel
-    create_filepath(modPath + "/content/Common/Package");
-
     // I'm great at menu design :D - Nathaniel
     WHBLogPrintf("Themiify");
     WHBLogPrintf("-----------------------------------------------------");
     WHBLogPrintf("Installed Wii U Menu title ID: %s", menuIDStr);
 
-    // Retrieve the paths of the input file and the patch file
-    // Lil disclaimer, fs:/vol/external01/ is the path to the root of the sd card
-    // Open input file
-    std::FILE* inputFile = std::fopen(inputPath.c_str(), "rb");
-    if (!inputFile) {
-        WHBLogPrintf("Failed to open input file: %s\n", inputPath.c_str());
-        error();
-    }
+    std::unique_ptr<json::json> themeMeta = std::make_unique<json::json>();
+    std::ifstream themeMetaFileStream(themePath + "metadata.json");
+    themeMetaFileStream >> *themeMeta;
+    themeMetaFileStream.close();
 
-    // Open patch file
-    std::FILE* patchFile = std::fopen(patchPath.c_str(), "rb");
-    if (!patchFile) {
-        WHBLogPrintf("Failed to open patch file: %s\n", patchPath.c_str());
-        std::fclose(inputFile);
-        error();
-    }
 
-    // Get the size of the input file
-    std::fseek(inputFile, 0, SEEK_END);
-    std::size_t inputSize = std::ftell(inputFile);
-    std::rewind(inputFile);
-
-    // Get the size of the patch file
-    std::fseek(patchFile, 0, SEEK_END);
-    std::size_t patchSize = std::ftell(patchFile);
-    std::rewind(patchFile);
-
-    // Read the files into arrays
-    std::vector<uint8_t> inputData(inputSize);
-    std::vector<uint8_t> patchData(patchSize);
-
-    if (std::fread(inputData.data(), 1, inputSize, inputFile) != inputSize) {
-        WHBLogPrintf("Failed to read input file.\n");
-        std::fclose(inputFile);
-        std::fclose(patchFile);
-        error();
-    }
-
-    if (std::fread(patchData.data(), 1, patchSize, patchFile) != patchSize) {
-        WHBLogPrintf("Failed to read patch file.\n");
-        std::fclose(inputFile);
-        std::fclose(patchFile);
-        error();
-    }
-
-    std::fclose(inputFile);
-    std::fclose(patchFile);
-
-    Hips::PatchType patchType;
-    std::string extension = patchPath;
-
-    WHBLogPrintf("Patching file, please wait...");
+    themeID = themeMeta->at("Metadata").at("themeID");
+    WHBLogPrintf("Generated theme path");
     WHBLogConsoleDraw();
 
-    auto [bytes, result] = Hips::patch(inputData.data(), inputSize, patchData.data(), patchSize, Hips::PatchType::BPS);
-    if (result == Hips::Result::Success) {
-        WHBLogPrintf("Patch applied successfully");
-        WHBLogPrintf("Writing file, please wait...");
-        WHBLogPrintf("(Your console isn't frozen in this case!)");
-        WHBLogPrintf("");
-        WHBLogConsoleDraw();
+    WHBLogPrintf("----- Theme Info -----");
+    WHBLogPrintf("Theme Name: %s", std::string(themeMeta->at("Metadata").at("themeName")).c_str());
+    WHBLogPrintf("Theme Author: %s", std::string(themeMeta->at("Metadata").at("themeAuthor")).c_str());
+    WHBLogPrintf("Theme ID: %s", std::string(themeMeta->at("Metadata").at("themeID")).c_str());
 
-        // Write the patch file and test it out haha
-        std::FILE* outputFile = std::fopen(outputPath.c_str(), "wb");
-        if (!outputFile) {
-            WHBLogPrintf("Failed to open output file: Men-patched.pack\n");
-            error();
-        }
-
-        if (std::fwrite(bytes.data(), 1, bytes.size(), outputFile) != bytes.size()) {
-            WHBLogPrintf("Failed to write to output file: Men-patched.pack\n");
-            std::fclose(outputFile);
-            error();
-        }
-
-        std::fclose(outputFile);
-        WHBLogPrintf("Patch succeeded! (Press A to close)");
-    } else {
-        WHBLogPrintf("Patching failed :(\n");
+    // List included patches
+    WHBLogPrintf("----- Included Patches -----");
+    for (auto item : themeMeta->at("Patches").items()) {
+        WHBLogPrintf(std::string(item.value()).c_str());
     }
 
+    WHBLogPrintf("----- Starting Patch -----");
+    WHBLogConsoleDraw();
+
+    // Variable declaration for patching process
+    std::string inputPath;
+    std::string patchPath;
+    std::string outputPath;
+    std::FILE* inputFile;
+    std::FILE* patchFile;
+    std::vector<uint8_t> inputData;
+    std::vector<uint8_t> patchData;
+    std::FILE* outputFile;
+
+    // Patch all files listed in the "Patches" section of the theme metadata
+    for (auto& [patchFilename, menuFilePath] : themeMeta->at("Patches").items()) {
+        // Generate the paths of the input file, the patch file and the output file
+        inputPath = menuContentPath + std::string(menuFilePath);
+        patchPath = themePath + "patches/" + patchFilename;
+        outputPath = modPath + "content/" + std::string(menuFilePath);
+        
+        // Prepare parent directory structure required for currently patched file
+        create_parent_directory_structure(outputPath);
+        WHBLogPrintf("Filepath created (long?)");
+        WHBLogConsoleDraw();
+
+        WHBLogPrintf(("Patching file " + patchFilename).c_str());
+        WHBLogConsoleDraw();
+
+
+        // Open input file
+        inputFile = std::fopen(inputPath.c_str(), "rb");
+        if (!inputFile) {
+            WHBLogPrintf("Failed to open input file: %s\n", inputPath.c_str());
+            error();
+        }
+
+        // Open patch file
+        patchFile = std::fopen(patchPath.c_str(), "rb");
+        if (!patchFile) {
+            WHBLogPrintf("Failed to open patch file: %s\n", patchPath.c_str());
+            std::fclose(inputFile);
+            error();
+        }
+
+        // Get the size of the input file
+        std::fseek(inputFile, 0, SEEK_END);
+        std::size_t inputSize = std::ftell(inputFile);
+        std::rewind(inputFile);
+
+        // Get the size of the patch file
+        std::fseek(patchFile, 0, SEEK_END);
+        std::size_t patchSize = std::ftell(patchFile);
+        std::rewind(patchFile);
+
+        // Read the files into arrays
+        // std::vector<uint8_t> inputData(inputSize);
+        // std::vector<uint8_t> patchData(patchSize);
+        inputData.clear();
+        inputData.resize(inputSize);
+        patchData.clear();
+        patchData.resize(inputSize);
+
+        if (std::fread(inputData.data(), 1, inputSize, inputFile) != inputSize) {
+            WHBLogPrintf("Failed to read input file.\n");
+            std::fclose(inputFile);
+            std::fclose(patchFile);
+            error();
+        }
+
+        if (std::fread(patchData.data(), 1, patchSize, patchFile) != patchSize) {
+            WHBLogPrintf("Failed to read patch file.\n");
+            std::fclose(inputFile);
+            std::fclose(patchFile);
+            error();
+        }
+
+        std::fclose(inputFile);
+        std::fclose(patchFile);
+
+        WHBLogPrintf("Patching file, please wait...");
+        WHBLogConsoleDraw();
+
+        auto [bytes, result] = Hips::patch(inputData.data(), inputSize, patchData.data(), patchSize, Hips::PatchType::BPS);
+        if (result == Hips::Result::Success) {
+            WHBLogPrintf("Patch applied successfully");
+            WHBLogPrintf("Writing file, please wait...");
+            WHBLogPrintf("(Your console isn't frozen in this case!)");
+            WHBLogConsoleDraw();
+
+            // Write the patch file and test it out haha
+            outputFile = std::fopen(outputPath.c_str(), "wb");
+            if (!outputFile) {
+                WHBLogPrintf("Failed to open output file: %s\n", outputPath.c_str());
+                error();
+            }
+
+            if (std::fwrite(bytes.data(), 1, bytes.size(), outputFile) != bytes.size()) {
+                WHBLogPrintf("Failed to write to output file: %s\n", outputPath.c_str());
+                std::fclose(outputFile);
+                error();
+            }
+
+            std::fclose(outputFile);
+            WHBLogPrintf(("Successfully patched file " + patchFilename + "!").c_str());
+            WHBLogPrintf("");
+        } else {
+            WHBLogPrintf("Patching failed :(\n");
+            error();
+        }
+    }
+
+    WHBLogPrintf("Patch succeeded! (Press A to close)");
     while (WHBProcIsRunning()) {
         VPADRead(VPAD_CHAN_0, vpadStatusBuff, 1, NULL);
         if (vpadStatusBuff[0].trigger == VPAD_BUTTON_A) SYSLaunchMenu();
