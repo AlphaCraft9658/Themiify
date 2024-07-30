@@ -7,8 +7,6 @@
 #include <sysapp/launch.h>
 #include <vpad/input.h>
 // #include <json/json.h>
-#include <tao/json.hpp>
-#include <tao/json/contrib/traits.hpp>
 #include "hips.hpp"
 #include <cstdint>
 #include <cstdio>
@@ -76,11 +74,7 @@ int main(int argc, char **argv)
     // WHBLogPrintf("----- Json Test End -----");
     // WHBLogConsoleDraw();
 
-    const std::unique_ptr<tao::json::value> themeMeta = std::make_unique<tao::json::value>(tao::json::from_file(themePath + "test_theme.json"));
-    WHBLogPrintf(themeMeta->is_object() ? "true" : "false");
-    // This part doesn't work yet
-    const std::unique_ptr<tao::json::value> themeMetaData = std::make_unique<tao::json::value>(themeMeta->as<tao::json::value>("Metadata"));
-    WHBLogPrintf(themeMetaData->is_object() ? "true" : "false");
+    
 
     // temp stuff till we implement more than one file patching - Nathaniel
     std::string inputPath = menuContentPath + "Common/Package/Men.pack"; // Gonna read from the NAND now like a big boy - Nathaniel
