@@ -1,0 +1,12 @@
+{
+    "Metadata": {
+        "themeName": "Test Theme",
+        "themeAuthor": "Author Name",
+        "themePreviewImage": "preview.png",
+        "themeID": "test_theme"
+    },
+    "Patches": {
+        "Men.bps": "Common/Package/Men.pack",
+        "Men2.bps": "Common/Package/Men2.pack"
+    }
+}
