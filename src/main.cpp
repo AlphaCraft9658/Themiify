@@ -24,6 +24,25 @@ bool create_filepath(std::string filepath) {
         return std::filesystem::create_directories(filepath);
 }
 
+
+// trim from end (in place)
+inline void rtrim_path(std::string &s) {
+    s.erase(std::find_if(s.rbegin(), s.rend(), [](unsigned char ch) {
+        return ch == '/';
+    }).base(), s.end());
+}
+
+// trim from end (copying)
+inline std::string rtrim_path_cp(std::string s) {
+    rtrim_path(s);
+    return s;
+}
+
+// Creates the parent directories of a file
+bool create_parent_directory_structure(std::string filepath) {
+    return create_filepath(rtrim_path_cp(filepath));
+}
+
 int main(int argc, char **argv)
 {
     WHBProcInit();
