@@ -142,7 +142,7 @@ int main(int argc, char **argv)
         
         // Prepare parent directory structure required for currently patched file
         create_parent_directory_structure(outputPath);
-        WHBLogPrintf("Filepath created (long?)");
+        WHBLogPrintf("Filepath created");
         WHBLogConsoleDraw();
 
         WHBLogPrintf(("Patching file " + patchFilename).c_str());
