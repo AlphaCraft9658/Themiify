@@ -85,15 +85,6 @@ int main(int argc, char **argv)
     std::string themeID;
     std::string themePath = themesPath + "test_theme" + "/";
 
-    // Json::Value themeMeta;
-    // std::ifstream themeMetaFileStream(themePath + "test_theme.json");
-    // themeMetaFileStream >> themeMeta;
-    // themeMetaFileStream.close();
-    // WHBLogPrintf("----- Json Test -----");
-    // WHBLogPrintf(themeMeta.get("Metadata", "UTF-8").get("themeName", "UTF-8").asString().c_str());
-    // WHBLogPrintf("----- Json Test End -----");
-    // WHBLogConsoleDraw();
-
     // I'm great at menu design :D - Nathaniel
     WHBLogPrintf("Themiify");
     WHBLogPrintf("-----------------------------------------------------");
