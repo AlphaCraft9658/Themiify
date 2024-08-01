@@ -17,3 +17,5 @@ bashrc
 devcontainer_dockerfile
 devcontainer-compose.yaml
 testing_files
+*.wuhb
+*.lst
