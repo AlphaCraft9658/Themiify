@@ -47,6 +47,14 @@ bool create_parent_directory_structure(std::string filepath) {
     return create_filepath(rtrim_path_cp(filepath));
 }
 
+std::vector<std::string> listZipEntries(zip* zipFile) {
+    std::vector<std::string> result;
+    for (int i=0; i < zip_get_num_entries(zipFile, 0); i++) {
+        result.push_back(zip_get_name(zipFile, i, 0));
+    }
+    return result;
+}
+
 int main(int argc, char **argv)
 {
     WHBProcInit();
