@@ -15,6 +15,7 @@
 #include <memory>
 #include <vector>
 #include <filesystem>
+#include <zip.h>
 namespace json = nlohmann;
 
 void error(std::string errorMessage=NULL) {
@@ -91,12 +92,46 @@ int main(int argc, char **argv)
     WHBLogPrintf("Themiify");
     WHBLogPrintf("-----------------------------------------------------");
     WHBLogPrintf("Installed Wii U Menu title ID: %s", menuIDStr);
+    WHBLogConsoleDraw();
 
-    std::unique_ptr<json::json> themeMeta = std::make_unique<json::json>();
-    std::ifstream themeMetaFileStream(themePath + "metadata.json");
-    themeMetaFileStream >> *themeMeta;
-    themeMetaFileStream.close();
+    struct zip* themeArchive;
+    int zipErr;
 
+    if ((themeArchive = zip_open((themePath + "test_theme.utheme").c_str(), ZIP_RDONLY, &zipErr)) == NULL) {
+        zip_error_t error_type;
+        zip_error_init_with_code(&error_type, zipErr);
+        error("Cannot open zip archive:" + std::string(zip_error_strerror(&error_type)));
+    }
+    
+    WHBLogPrintf("----- Reading metadata from archive -----");
+    struct zip_file* metadataFile;
+    if (zip_name_locate(themeArchive, "metadata.json", 0) == -1) {
+        error("Could not locate metadata.json file inside of the archive");
+    }
+
+    metadataFile = zip_fopen(themeArchive, "metadata.json", 0);
+
+    struct zip_stat st;
+    zip_stat(themeArchive, "metadata.json", ZIP_STAT_SIZE, &st);
+    std::string buffer(st.size, '\0');
+
+    zip_fread(metadataFile, &buffer[0], st.size);
+
+    WHBLogPrintf("----- Files registered in metadata.json -----");
+    std::unique_ptr<json::json> themeMeta = std::make_unique<json::json>(json::json::parse(buffer));
+    for (auto item : themeMeta->at("Patches").items()) {
+        WHBLogPrintf(std::string(item.value()).c_str());
+    }
+
+    WHBLogConsoleDraw();
+
+    
+    // std::unique_ptr<json::json> themeMeta = std::make_unique<json::json>();
+    // std::ifstream themeMetaFileStream(themePath + "metadata.json");
+    // themeMetaFileStream >> *themeMeta;
+    // themeMetaFileStream.close();
+    zip_fclose(metadataFile);
+    zip_close(themeArchive);
 
     themeID = themeMeta->at("Metadata").at("themeID");
 
