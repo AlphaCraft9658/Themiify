@@ -17,7 +17,9 @@
 #include <filesystem>
 namespace json = nlohmann;
 
-void error() {
+void error(std::string errorMessage=NULL) {
+    WHBLogPrintf(errorMessage.c_str());
+    WHBLogConsoleDraw();
     SYSLaunchMenu();
 }
 
