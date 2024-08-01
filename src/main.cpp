@@ -99,8 +99,6 @@ int main(int argc, char **argv)
 
 
     themeID = themeMeta->at("Metadata").at("themeID");
-    WHBLogPrintf("Generated theme path");
-    WHBLogConsoleDraw();
 
     WHBLogPrintf("----- Theme Info -----");
     WHBLogPrintf("Theme Name: %s", std::string(themeMeta->at("Metadata").at("themeName")).c_str());
