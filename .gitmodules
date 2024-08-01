@@ -1,3 +1,6 @@
 [submodule "libmocha"]
 	path = libmocha
 	url = https://github.com/wiiu-env/libmocha
+[submodule "minizip-ng"]
+	path = minizip-ng
+	url = https://github.com/zlib-ng/minizip-ng.git
