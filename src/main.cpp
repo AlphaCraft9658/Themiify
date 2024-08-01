@@ -114,22 +114,12 @@ int main(int argc, char **argv)
     WHBLogPrintf("----- Starting Patch -----");
     WHBLogConsoleDraw();
 
-    // Variable declaration for patching process
-    std::string inputPath;
-    std::string patchPath;
-    std::string outputPath;
-    std::FILE* inputFile;
-    std::FILE* patchFile;
-    std::vector<uint8_t> inputData;
-    std::vector<uint8_t> patchData;
-    std::FILE* outputFile;
-
     // Patch all files listed in the "Patches" section of the theme metadata
     for (auto& [patchFilename, menuFilePath] : themeMeta->at("Patches").items()) {
         // Generate the paths of the input file, the patch file and the output file
-        inputPath = menuContentPath + std::string(menuFilePath);
-        patchPath = themePath + "patches/" + patchFilename;
-        outputPath = modPath + "content/" + std::string(menuFilePath);
+        std::string inputPath = menuContentPath + std::string(menuFilePath);
+        std::string patchPath = themePath + "patches/" + patchFilename;
+        std::string outputPath = modPath + "content/" + std::string(menuFilePath);
         
         // Prepare parent directory structure required for currently patched file
         create_parent_directory_structure(outputPath);
@@ -141,14 +131,14 @@ int main(int argc, char **argv)
 
 
         // Open input file
-        inputFile = std::fopen(inputPath.c_str(), "rb");
+        std::FILE* inputFile = std::fopen(inputPath.c_str(), "rb");
         if (!inputFile) {
             WHBLogPrintf("Failed to open input file: %s\n", inputPath.c_str());
             error();
         }
 
         // Open patch file
-        patchFile = std::fopen(patchPath.c_str(), "rb");
+        std::FILE* patchFile = std::fopen(patchPath.c_str(), "rb");
         if (!patchFile) {
             WHBLogPrintf("Failed to open patch file: %s\n", patchPath.c_str());
             std::fclose(inputFile);
@@ -166,12 +156,8 @@ int main(int argc, char **argv)
         std::rewind(patchFile);
 
         // Read the files into arrays
-        // std::vector<uint8_t> inputData(inputSize);
-        // std::vector<uint8_t> patchData(patchSize);
-        inputData.clear();
-        inputData.resize(inputSize);
-        patchData.clear();
-        patchData.resize(inputSize);
+        std::vector<uint8_t> inputData(inputSize);
+        std::vector<uint8_t> patchData(patchSize);
 
         if (std::fread(inputData.data(), 1, inputSize, inputFile) != inputSize) {
             WHBLogPrintf("Failed to read input file.\n");
@@ -201,7 +187,7 @@ int main(int argc, char **argv)
             WHBLogConsoleDraw();
 
             // Write the patch file and test it out haha
-            outputFile = std::fopen(outputPath.c_str(), "wb");
+            std::FILE* outputFile = std::fopen(outputPath.c_str(), "wb");
             if (!outputFile) {
                 WHBLogPrintf("Failed to open output file: %s\n", outputPath.c_str());
                 error();
