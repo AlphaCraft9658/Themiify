@@ -7,7 +7,7 @@
 #include <sysapp/launch.h>
 #include <vpad/input.h>
 #include <nlohmann/json.hpp>
-#include "hips.hpp"
+#include <hips.hpp>
 #include <cstdint>
 #include <cstdio>
 #include <fstream>
