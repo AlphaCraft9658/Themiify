@@ -6,7 +6,7 @@
         "themeID": "test_theme"
     },
     "Patches": {
-        "Men.bps": "Common/Package/Men.pack",
-        "Men2.bps": "Common/Package/Men2.pack"
+        "Common/Package/Men.bps": "Common/Package/Men.pack",
+        "Common/Package/Men2.bps": "Common/Package/Men2.pack"
     }
 }
