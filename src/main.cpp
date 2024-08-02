@@ -105,7 +105,7 @@ int main(int argc, char **argv)
     struct zip* themeArchive;
     int zipErr;
 
-    if ((themeArchive = zip_open((themePath + "test_theme.utheme").c_str(), ZIP_RDONLY, &zipErr)) == NULL) {
+    if ((themeArchive = zip_open((themesPath + "test_theme.utheme").c_str(), ZIP_RDONLY, &zipErr)) == NULL) {
         zip_error_t error_type;
         zip_error_init_with_code(&error_type, zipErr);
         error("Cannot open zip archive:" + std::string(zip_error_strerror(&error_type)));
@@ -124,22 +124,9 @@ int main(int argc, char **argv)
     std::string buffer(st.size, '\0');
 
     zip_fread(metadataFile, &buffer[0], st.size);
-
-    WHBLogPrintf("----- Files registered in metadata.json -----");
-    std::unique_ptr<json::json> themeMeta = std::make_unique<json::json>(json::json::parse(buffer));
-    for (auto item : themeMeta->at("Patches").items()) {
-        WHBLogPrintf(std::string(item.value()).c_str());
-    }
-
-    WHBLogConsoleDraw();
-
-    
-    // std::unique_ptr<json::json> themeMeta = std::make_unique<json::json>();
-    // std::ifstream themeMetaFileStream(themePath + "metadata.json");
-    // themeMetaFileStream >> *themeMeta;
-    // themeMetaFileStream.close();
     zip_fclose(metadataFile);
-    zip_close(themeArchive);
+
+    std::unique_ptr<json::json> themeMeta = std::make_unique<json::json>(json::json::parse(buffer));
 
     themeID = themeMeta->at("Metadata").at("themeID");
 
@@ -158,10 +145,10 @@ int main(int argc, char **argv)
     WHBLogConsoleDraw();
 
     // Patch all files listed in the "Patches" section of the theme metadata
-    for (auto& [patchFilename, menuFilePath] : themeMeta->at("Patches").items()) {
+    for (auto& [patchFilepath, menuFilePath] : themeMeta->at("Patches").items()) {
         // Generate the paths of the input file, the patch file and the output file
         std::string inputPath = menuContentPath + std::string(menuFilePath);
-        std::string patchPath = themePath + "patches/" + patchFilename;
+        std::string patchPath = "patches/" + patchFilepath;
         std::string outputPath = modPath + "content/" + std::string(menuFilePath);
         
         // Prepare parent directory structure required for currently patched file
@@ -169,23 +156,22 @@ int main(int argc, char **argv)
         WHBLogPrintf("Filepath created");
         WHBLogConsoleDraw();
 
-        WHBLogPrintf(("Patching file " + patchFilename).c_str());
+        WHBLogPrintf(("Applying patch: " + patchFilepath).c_str());
         WHBLogConsoleDraw();
 
 
         // Open input file
         std::FILE* inputFile = std::fopen(inputPath.c_str(), "rb");
         if (!inputFile) {
-            WHBLogPrintf("Failed to open input file: %s\n", inputPath.c_str());
-            error();
+            error("Failed to open input file: " + inputPath);
         }
 
         // Open patch file
-        std::FILE* patchFile = std::fopen(patchPath.c_str(), "rb");
-        if (!patchFile) {
-            WHBLogPrintf("Failed to open patch file: %s\n", patchPath.c_str());
-            std::fclose(inputFile);
-            error();
+        struct zip_file* patchFile = zip_fopen(themeArchive, patchPath.c_str(), 0);
+        if (patchFile == NULL) {
+            zip_error_t error_type;
+            zip_error_init_with_code(&error_type, zipErr);
+            error("Could not open patch file " + patchPath + ":" + std::string(zip_error_strerror(&error_type)));
         }
 
         // Get the size of the input file
@@ -194,30 +180,28 @@ int main(int argc, char **argv)
         std::rewind(inputFile);
 
         // Get the size of the patch file
-        std::fseek(patchFile, 0, SEEK_END);
-        std::size_t patchSize = std::ftell(patchFile);
-        std::rewind(patchFile);
+        struct zip_stat patchStat;
+        zip_stat(themeArchive, patchPath.c_str(), ZIP_STAT_SIZE, &patchStat);
+        std::size_t patchSize = patchStat.size;
 
         // Read the files into arrays
         std::vector<uint8_t> inputData(inputSize);
         std::vector<uint8_t> patchData(patchSize);
 
         if (std::fread(inputData.data(), 1, inputSize, inputFile) != inputSize) {
-            WHBLogPrintf("Failed to read input file.\n");
             std::fclose(inputFile);
-            std::fclose(patchFile);
-            error();
+            zip_fclose(patchFile);
+            error("Failed to read input file.");
         }
 
-        if (std::fread(patchData.data(), 1, patchSize, patchFile) != patchSize) {
-            WHBLogPrintf("Failed to read patch file.\n");
+        if (zip_fread(patchFile, patchData.data(), patchSize) != patchSize) {
             std::fclose(inputFile);
-            std::fclose(patchFile);
-            error();
+            zip_fclose(patchFile);
+            error("Failed to read patch file.");
         }
 
         std::fclose(inputFile);
-        std::fclose(patchFile);
+        zip_fclose(patchFile);
 
         WHBLogPrintf("Patching file, please wait...");
         WHBLogConsoleDraw();
@@ -232,22 +216,20 @@ int main(int argc, char **argv)
             // Write the patch file and test it out haha
             std::FILE* outputFile = std::fopen(outputPath.c_str(), "wb");
             if (!outputFile) {
-                WHBLogPrintf("Failed to open output file: %s\n", outputPath.c_str());
-                error();
+                error("Failed to open output file: " + outputPath);
             }
 
             if (std::fwrite(bytes.data(), 1, bytes.size(), outputFile) != bytes.size()) {
-                WHBLogPrintf("Failed to write to output file: %s\n", outputPath.c_str());
                 std::fclose(outputFile);
-                error();
+                error("Failed to write to output file: " + outputPath);
             }
 
             std::fclose(outputFile);
-            WHBLogPrintf(("Successfully patched file " + patchFilename + "!").c_str());
+            WHBLogPrintf("----------");
+            WHBLogPrintf(("Successfully applied patch: " + patchFilepath).c_str());
             WHBLogPrintf("");
         } else {
-            WHBLogPrintf("Patching failed :(\n");
-            error();
+            error("Patching failed :(");
         }
     }
 
@@ -258,6 +240,7 @@ int main(int argc, char **argv)
         WHBLogConsoleDraw();
     }
 
+    zip_close(themeArchive);
     Mocha_UnmountFS("storage_mlc");
     WHBLogConsoleFree();
     WHBLogUdpDeinit();
