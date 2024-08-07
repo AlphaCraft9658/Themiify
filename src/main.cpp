@@ -118,7 +118,7 @@ int main(int argc, char **argv)
     if ((themeArchive = zip_open((themesPath + "test_theme.utheme").c_str(), ZIP_RDONLY, &zipErr)) == NULL) {
         zip_error_t error_type;
         zip_error_init_with_code(&error_type, zipErr);
-        error("Cannot open zip archive:" + std::string(zip_error_strerror(&error_type)));
+        return error("Cannot open zip archive:" + std::string(zip_error_strerror(&error_type)));
     }
     
     WHBLogPrintf("----- Reading metadata from archive -----");
@@ -173,7 +173,7 @@ int main(int argc, char **argv)
         // Open input file
         std::FILE* inputFile = std::fopen(inputPath.c_str(), "rb");
         if (!inputFile) {
-            error("Failed to open input file: " + inputPath);
+            return error("Failed to open input file: " + inputPath);
         }
 
         // Open patch file
@@ -181,7 +181,7 @@ int main(int argc, char **argv)
         if (patchFile == NULL) {
             zip_error_t error_type;
             zip_error_init_with_code(&error_type, zipErr);
-            error("Could not open patch file " + patchPath + ":" + std::string(zip_error_strerror(&error_type)));
+            return error("Could not open patch file " + patchPath + ":" + std::string(zip_error_strerror(&error_type)));
         }
 
         // Get the size of the input file
@@ -201,13 +201,13 @@ int main(int argc, char **argv)
         if (std::fread(inputData.data(), 1, inputSize, inputFile) != inputSize) {
             std::fclose(inputFile);
             zip_fclose(patchFile);
-            error("Failed to read input file.");
+            return error("Failed to read input file.");
         }
 
         if (zip_fread(patchFile, patchData.data(), patchSize) != patchSize) {
             std::fclose(inputFile);
             zip_fclose(patchFile);
-            error("Failed to read patch file.");
+            return error("Failed to read patch file.");
         }
 
         std::fclose(inputFile);
@@ -226,12 +226,12 @@ int main(int argc, char **argv)
             // Write the patch file and test it out haha
             std::FILE* outputFile = std::fopen(outputPath.c_str(), "wb");
             if (!outputFile) {
-                error("Failed to open output file: " + outputPath);
+                return error("Failed to open output file: " + outputPath);
             }
 
             if (std::fwrite(bytes.data(), 1, bytes.size(), outputFile) != bytes.size()) {
                 std::fclose(outputFile);
-                error("Failed to write to output file: " + outputPath);
+                return error("Failed to write to output file: " + outputPath);
             }
 
             std::fclose(outputFile);
@@ -239,7 +239,7 @@ int main(int argc, char **argv)
             WHBLogPrintf(("Successfully applied patch: " + patchFilepath).c_str());
             WHBLogPrintf("");
         } else {
-            error("Patching failed :(");
+            return error("Patching failed :(");
         }
     }
 
