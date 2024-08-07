@@ -32,7 +32,7 @@ include $(DEVKITPRO)/wut/share/wut_rules
 #-------------------------------------------------------------------------------
 TARGET		:=	Themiify
 BUILD		:=	build
-SOURCES		:=	src include/utils
+SOURCES		:=	src include include/utils
 DATA		:=	data
 INCLUDES	:=	include
 CONTENT		:=
