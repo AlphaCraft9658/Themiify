@@ -18,10 +18,20 @@
 #include <zip.h>
 namespace json = nlohmann;
 
-void error(std::string errorMessage=NULL) {
+int error(std::string errorMessage="") {
     WHBLogPrintf(errorMessage.c_str());
-    WHBLogConsoleDraw();
+    // WHBLogConsoleDraw();
     SYSLaunchMenu();
+    while (WHBProcIsRunning()) {}
+    DrawUtils::DeInit();
+    Mocha_UnmountFS("storage_mlc");
+    VPADShutdown();
+    KPADShutdown();
+    // WHBLogConsoleFree();
+    Mocha_DeInitLibrary();
+    WHBLogUdpDeinit();
+    WHBProcShutdown();
+    return -1;
 }
 
 bool create_filepath(std::string filepath) {
