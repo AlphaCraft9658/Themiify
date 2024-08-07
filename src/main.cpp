@@ -16,6 +16,7 @@
 #include <vector>
 #include <filesystem>
 #include <zip.h>
+using namespace std::literals;
 namespace json = nlohmann;
 
 int error(std::string errorMessage="") {
