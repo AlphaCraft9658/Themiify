@@ -138,7 +138,7 @@ int main(int argc, char **argv)
 
     std::unique_ptr<json::json> themeMeta = std::make_unique<json::json>(json::json::parse(buffer));
 
-    themeID = themeMeta->at("Metadata").at("themeID");
+    themeID = std::string(themeMeta->at("Metadata").at("themeID"));
 
     WHBLogPrintf("----- Theme Info -----");
     WHBLogPrintf("Theme Name: %s", std::string(themeMeta->at("Metadata").at("themeName")).c_str());
