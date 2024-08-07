@@ -244,15 +244,21 @@ int main(int argc, char **argv)
     }
 
     WHBLogPrintf("Patch succeeded! (Press A to close)");
+zip_close(themeArchive);
+    bool closed = false;
     while (WHBProcIsRunning()) {
-        VPADRead(VPAD_CHAN_0, vpadStatusBuff, 1, NULL);
-        if (vpadStatusBuff[0].trigger == VPAD_BUTTON_A) SYSLaunchMenu();
-        WHBLogConsoleDraw();
+        VPADRead(VPAD_CHAN_0, vpadStatus.get(), 1, NULL);
+        KPADRead(WPAD_CHAN_0, kpadStatus.get(), 1);
+        if ((vpadStatus->trigger == VPAD_BUTTON_A || kpadStatus->trigger == WPAD_PRO_BUTTON_A) && !closed) SYSLaunchMenu();
+        // WHBLogConsoleDraw();
     }
 
     zip_close(themeArchive);
     Mocha_UnmountFS("storage_mlc");
-    WHBLogConsoleFree();
+    VPADShutdown();
+    KPADShutdown();
+    // WHBLogConsoleFree();
+    Mocha_DeInitLibrary();
     WHBLogUdpDeinit();
     WHBProcShutdown();
 
