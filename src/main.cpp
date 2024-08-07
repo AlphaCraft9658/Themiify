@@ -6,6 +6,7 @@
 #include <mocha/mocha.h>
 #include <sysapp/launch.h>
 #include <vpad/input.h>
+#include <padscore/kpad.h>
 #include <nlohmann/json.hpp>
 #include <hips.hpp>
 #include <cstdint>
@@ -38,7 +39,6 @@ int error(std::string errorMessage="") {
 bool create_filepath(std::string filepath) {
         return std::filesystem::create_directories(filepath);
 }
-
 
 // trim from end (in place)
 inline void rtrim_path(std::string &s) {
@@ -74,7 +74,7 @@ int main(int argc, char **argv)
     WHBLogConsoleSetColor(0x000000);
     Mocha_InitLibrary();
     VPADInit();
-    VPADStatus vpadStatusBuff[1];
+    KPADInit();
 
     // Mount storage_mlc
     // NOTE: storage_mlc is the system mlc_storage where the system menu as well as other system titles are located
