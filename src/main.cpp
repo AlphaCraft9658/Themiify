@@ -148,7 +148,7 @@ int main(int argc, char **argv)
 
     // List included patches
     WHBLogPrintf("----- Included Patches -----");
-    for (auto item : themeMeta->at("Patches").items()) {
+    for (auto& item : themeMeta->at("Patches").items()) {
         WHBLogPrintf(std::string(item.value()).c_str());
     }
 
