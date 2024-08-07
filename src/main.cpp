@@ -124,7 +124,7 @@ int main(int argc, char **argv)
     WHBLogPrintf("----- Reading metadata from archive -----");
     struct zip_file* metadataFile;
     if (zip_name_locate(themeArchive, "metadata.json", 0) == -1) {
-        error("Could not locate metadata.json file inside of the archive");
+        return error("Could not locate metadata.json file inside of the archive");
     }
 
     metadataFile = zip_fopen(themeArchive, "metadata.json", 0);
