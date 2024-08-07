@@ -7,6 +7,7 @@
 #include <sysapp/launch.h>
 #include <vpad/input.h>
 #include <padscore/kpad.h>
+#include <utils/DrawUtils.h>
 #include <nlohmann/json.hpp>
 #include <hips.hpp>
 #include <cstdint>
@@ -17,6 +18,7 @@
 #include <vector>
 #include <filesystem>
 #include <zip.h>
+#include <ui.h>
 using namespace std::literals;
 namespace json = nlohmann;
 
@@ -70,11 +72,27 @@ int main(int argc, char **argv)
 {
     WHBProcInit();
     WHBLogUdpInit();
-    WHBLogConsoleInit();
-    WHBLogConsoleSetColor(0x000000);
+    // WHBLogConsoleInit();
+    // WHBLogConsoleSetColor(0x000000);
     Mocha_InitLibrary();
     VPADInit();
     KPADInit();
+    OSEnableHomeButtonMenu(false);
+    if (!DrawUtils::Init()) {
+        return error("Could not initialize DrawUtils");
+    }
+    DrawUtils::initFont();
+    DrawUtils::setFontColor(Color(COLOR_WHITE));
+    DrawUtils::setFontSize(24);
+
+    std::unique_ptr<ui::Menu> menu = std::make_unique<ui::Menu>("Themiify - Development Build");
+    DrawUtils::beginDraw();
+    DrawUtils::clear(Color(COLOR_BLACK));
+    menu->render_header();
+    DrawUtils::endDraw();
+
+    std::unique_ptr<VPADStatus> vpadStatus = std::make_unique<VPADStatus>();
+    std::unique_ptr<KPADStatus> kpadStatus = std::make_unique<KPADStatus>();
 
     // Mount storage_mlc
     // NOTE: storage_mlc is the system mlc_storage where the system menu as well as other system titles are located
@@ -111,7 +129,7 @@ int main(int argc, char **argv)
     WHBLogPrintf("Themiify");
     WHBLogPrintf("-----------------------------------------------------");
     WHBLogPrintf("Installed Wii U Menu title ID: %s", menuIDStr);
-    WHBLogConsoleDraw();
+    // WHBLogConsoleDraw();
 
     struct zip* themeArchive;
     int zipErr;
@@ -153,7 +171,7 @@ int main(int argc, char **argv)
     }
 
     WHBLogPrintf("----- Starting Patch -----");
-    WHBLogConsoleDraw();
+    // WHBLogConsoleDraw();
 
     // Patch all files listed in the "Patches" section of the theme metadata
     for (auto& [patchFilepath, menuFilePath] : themeMeta->at("Patches").items()) {
@@ -165,10 +183,10 @@ int main(int argc, char **argv)
         // Prepare parent directory structure required for currently patched file
         create_parent_directory_structure(outputPath);
         WHBLogPrintf("Filepath created");
-        WHBLogConsoleDraw();
+        // WHBLogConsoleDraw();
 
         WHBLogPrintf(("Applying patch: " + patchFilepath).c_str());
-        WHBLogConsoleDraw();
+        // WHBLogConsoleDraw();
 
 
         // Open input file
@@ -215,14 +233,14 @@ int main(int argc, char **argv)
         zip_fclose(patchFile);
 
         WHBLogPrintf("Patching file, please wait...");
-        WHBLogConsoleDraw();
+        // WHBLogConsoleDraw();
 
         auto [bytes, result] = Hips::patch(inputData.data(), inputSize, patchData.data(), patchSize, Hips::PatchType::BPS);
         if (result == Hips::Result::Success) {
             WHBLogPrintf("Patch applied successfully");
             WHBLogPrintf("Writing file, please wait...");
             WHBLogPrintf("(Your console isn't frozen in this case!)");
-            WHBLogConsoleDraw();
+            // WHBLogConsoleDraw();
 
             // Write the patch file and test it out haha
             std::FILE* outputFile = std::fopen(outputPath.c_str(), "wb");
@@ -245,7 +263,7 @@ int main(int argc, char **argv)
     }
 
     WHBLogPrintf("Patch succeeded! (Press A to close)");
-zip_close(themeArchive);
+    zip_close(themeArchive);
     bool closed = false;
     while (WHBProcIsRunning()) {
         VPADRead(VPAD_CHAN_0, vpadStatus.get(), 1, NULL);
@@ -254,7 +272,7 @@ zip_close(themeArchive);
         // WHBLogConsoleDraw();
     }
 
-    zip_close(themeArchive);
+    DrawUtils::DeInit();
     Mocha_UnmountFS("storage_mlc");
     VPADShutdown();
     KPADShutdown();
