@@ -19,3 +19,5 @@ devcontainer-compose.yaml
 testing_files
 *.wuhb
 *.lst
+VSCode-Config.zip
+workspace.code-workspace
