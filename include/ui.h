@@ -7,6 +7,17 @@
 #include <whb/log_console.h>
 #include <utils/DrawUtils.h>
 
+typedef enum selectionState {
+    UNSELECTED = 0,
+    SELECTED = 1,
+} selectionState;
+
+typedef enum entryType {
+    GENERIC_ENTRY = 0,
+    SUBMENU_ENTRY = 1,
+    SELECTION_ENTRY = 2,
+} entryType;
+
 namespace ui {
     class Menu {
         private:

@@ -4,17 +4,6 @@ using namespace ui;
 // #define SUBMENU_ENTRY (int) 1
 // #define SELECTION_ENTRY (int) 2
 
-typedef enum selectionState {
-    UNSELECTED = 0,
-    SELECTED = 1,
-} selectionState;
-
-typedef enum entryType {
-    GENERIC_ENTRY = 0,
-    SUBMENU_ENTRY = 1,
-    SELECTION_ENTRY = 2,
-} entryType;
-
 Menu::Menu(std::string header) : header(header) {
     this->submenus = std::make_unique<std::vector<Menu>>();
     generate_header_decoration(header);
