@@ -116,6 +116,7 @@ int main(int argc, char **argv)
     //       it could be risky when not handled properly, because wrong commands may override important system files.
     Mocha_MountFS("storage_mlc", nullptr, "/vol/storage_mlc01");
 
+    // Declare global variables
     uint64_t menuID = _SYSGetSystemApplicationTitleId(SYSTEM_APP_ID_WII_U_MENU);  // Retrieve the Wii U system menu titleID
     
     uint32_t menuIDParentDir = (uint32_t)(menuID >> 32);
