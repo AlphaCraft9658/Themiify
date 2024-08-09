@@ -74,7 +74,9 @@ int main(int argc, char **argv)
     WHBLogUdpInit();
     // WHBLogConsoleInit();
     // WHBLogConsoleSetColor(0x000000);
-    Mocha_InitLibrary();
+    if (Mocha_InitLibrary() != MOCHA_RESULT_SUCCESS) {
+        return error("Mocha library did not initialize properly");
+    }
     VPADInit();
     KPADInit();
     OSEnableHomeButtonMenu(false);
