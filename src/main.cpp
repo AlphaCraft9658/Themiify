@@ -112,17 +112,15 @@ int main(int argc, char **argv)
     char splitMenuID[18];
     snprintf(splitMenuID, sizeof(splitMenuID), "%08x/%08x", menuIDParentDir, menuIDChildDir);
 
-    // Testing for now - Nathaniel
-    // Minor modifications by AlphaCraft9658
-    std::string modpacksRoot = "fs:/vol/external01/wiiu/sdcafiine/" + std::string(menuIDStr) + "/";  // Will later be used for getting modpack paths, which depend on the theme name
-    std::string modPath = modpacksRoot + "themiify/";
-    std::string menuContentPath = "storage_mlc:/sys/title/" + std::string(splitMenuID) + "/content/";
+    const std::string modpacksRoot = "fs:/vol/external01/wiiu/sdcafiine/" + std::string(menuIDStr) + "/";  // Will later be used for getting modpack paths, which depend on the theme name
+    const std::string modPath = modpacksRoot + "themiify/";
+    const std::string menuContentPath = "storage_mlc:/sys/title/" + std::string(splitMenuID) + "/content/";
 
     // Themiify resource directories
-    std::string themiifyRoot = "fs:/vol/external01/wiiu/themiify/";
-    std::string themiifyTmp = themiifyRoot + "tmp/";
+    const std::string themiifyRoot = "fs:/vol/external01/wiiu/themiify/";
+    const std::string themiifyTmp = themiifyRoot + "tmp/";
     create_filepath(themiifyTmp);
-    std::string themesPath = themiifyRoot + "themes/";
+    const std::string themesPath = themiifyRoot + "themes/";
 
     std::string themeID;
     std::string themePath = themesPath + "test_theme" + "/";
