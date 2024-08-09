@@ -22,6 +22,11 @@
 using namespace std::literals;
 namespace json = nlohmann;
 
+typedef enum zipStatCheckedStatus {
+    ZIP_STAT_CHECKED_FAILURE,
+    ZIP_STAT_CHECKED_SUCCESS
+} zipStatCheckedStatus;
+
 int error(std::string errorMessage="") {
     WHBLogPrintf(errorMessage.c_str());
     // WHBLogConsoleDraw();
@@ -66,6 +71,16 @@ std::vector<std::string> listZipEntries(zip* zipFile) {
         result.push_back(zip_get_name(zipFile, i, 0));
     }
     return result;
+}
+
+zipStatCheckedStatus zip_stat_checked(zip_t* zipFile, const char* fileName, zip_flags_t zipFlags, zip_stat_t* statObject, int zipErrorInt) {
+    if (zip_stat(zipFile, fileName, zipFlags, statObject) != 0) {
+        zip_error_t error_type;
+        zip_error_init_with_code(&error_type, zipErrorInt);
+        error("Could not stat file \"" + std::string(fileName) + "\": " + std::string(zip_error_strerror(&error_type)) + " | (bad theme?)");
+        return ZIP_STAT_CHECKED_FAILURE;
+    }
+    return ZIP_STAT_CHECKED_SUCCESS;
 }
 
 int main(int argc, char **argv)
@@ -148,11 +163,14 @@ int main(int argc, char **argv)
 
     metadataFile = zip_fopen(themeArchive, "metadata.json", 0);
 
-    struct zip_stat st;
-    zip_stat(themeArchive, "metadata.json", ZIP_STAT_SIZE, &st);
-    std::string buffer(st.size, '\0');
+    struct zip_stat metaStat;
+    if (zip_stat_checked(themeArchive, "metadata.json", ZIP_STAT_SIZE, &metaStat, zipErr) == ZIP_STAT_CHECKED_FAILURE) {
+        return -1;
+    }
 
-    zip_fread(metadataFile, &buffer[0], st.size);
+    std::string buffer(metaStat.size, '\0');
+
+    zip_fread(metadataFile, &buffer[0], metaStat.size);
     zip_fclose(metadataFile);
 
     std::unique_ptr<json::json> themeMeta = std::make_unique<json::json>(json::json::parse(buffer));
@@ -210,7 +228,9 @@ int main(int argc, char **argv)
 
         // Get the size of the patch file
         struct zip_stat patchStat;
-        zip_stat(themeArchive, patchPath.c_str(), ZIP_STAT_SIZE, &patchStat);
+        if (zip_stat_checked(themeArchive, patchPath.c_str(), ZIP_STAT_SIZE, &patchStat, zipErr) == ZIP_STAT_CHECKED_FAILURE) {
+            return -1;
+        }
         std::size_t patchSize = patchStat.size;
 
         // Read the files into arrays
@@ -250,7 +270,7 @@ int main(int argc, char **argv)
 
             if (std::fwrite(bytes.data(), 1, bytes.size(), outputFile) != bytes.size()) {
                 std::fclose(outputFile);
-                return error("Failed to write to output file: " + outputPath);
+                return error("Failed to write to output file (an incorrect number of bytes has been written): " + outputPath);
             }
 
             std::fclose(outputFile);
