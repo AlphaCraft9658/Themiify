@@ -140,11 +140,14 @@ int main(int argc, char **argv)
     std::string themeID;
     std::string themePath = themesPath + "test_theme" + "/";
 
+    // Initial output and "UI" code; to be removed and replaced by interactive UI
     // I'm great at menu design :D - Nathaniel
     WHBLogPrintf("Themiify");
     WHBLogPrintf("-----------------------------------------------------");
     WHBLogPrintf("Installed Wii U Menu title ID: %s", menuIDStr);
     // WHBLogConsoleDraw();
+
+    //! ---------- Actual file handling starts here ----------
 
     struct zip* themeArchive;
     int zipErr;
