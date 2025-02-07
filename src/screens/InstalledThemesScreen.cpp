@@ -80,8 +80,9 @@ bool InstalledThemesScreen::Update(VPADStatus status)
             mFileList.clear();
 
             for (const auto & entry : std::filesystem::directory_iterator(THEMIIFY_INSTALLED_THEMES)) {
-                if (entry.path().extension() == ".json")
-                mFileList.push_back(entry.path());
+                if (entry.path().extension() == ".json") {
+                    mFileList.push_back(entry.path());
+                }
             }
 
             if (mFileList.size() == 0) {
