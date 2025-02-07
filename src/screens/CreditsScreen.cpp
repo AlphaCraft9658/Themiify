@@ -6,7 +6,6 @@
 #include "CreditsScreen.h"
 
 CreditsScreen::CreditsScreen()
-    :   mInitialTick(OSGetTick())
 {
 }
 
