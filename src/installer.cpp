@@ -20,7 +20,6 @@
 namespace json = nlohmann;
 
 namespace Installer {   
-
     Region GetSystemRegion() {
         uint64_t menuTitleID = _SYSGetSystemApplicationTitleId(SYSTEM_APP_ID_WII_U_MENU);
 
@@ -286,9 +285,9 @@ namespace Installer {
                     WHBLogPrintf("Could not open source file for %s", std::string(patchFilename).c_str());
                     themeInstallSuccess = false;  
                     break;
+                } else {
+                    CreateCacheFile(inputFile, cachePath.c_str());
                 }
-                
-                CreateCacheFile(inputFile, cachePath.c_str());
             }
             else {
                 WHBLogPrintf("Found %s in cache at %s", std::string(menuFilepath).c_str(), cachePath.c_str());
@@ -358,8 +357,11 @@ namespace Installer {
             installedThemeJson.clear();
         }
         else {
-            if (std::filesystem::exists(modpackPath)) {
-                //std::filesystem::remove_all(modpackPath); doesn't work, gonna have to figure out an alternative
+            try {
+                std::filesystem::remove_all(modpackPath);
+            }
+            catch (const std::filesystem::filesystem_error& e) {
+                WHBLogPrintf("Error removing directory: %s", e.what());
             }
         }
 
