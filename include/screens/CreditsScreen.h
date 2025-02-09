@@ -1,7 +1,5 @@
 #pragma once
 
-#include <coreinit/time.h>
-
 #include "screen.h"
 
 class CreditsScreen : public Screen
@@ -14,6 +12,5 @@ public:
 
     bool Update(VPADStatus status);
 private:
-    OSTick mInitialTick;
     void ColourLoop();
 };
