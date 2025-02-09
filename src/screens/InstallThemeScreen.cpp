@@ -73,7 +73,7 @@ void InstallThemeScreen::Draw()
             break;
         case MENU_STATE_INSTALLING_THEME:
             Gfx::SetBackgroundColour(BACKGROUND_COLOUR);
-            Gfx::Print(-4, 2, "Installing %s by %s...\nThis may take time, do not turn of your Wii U.", mThemeName.c_str(), mThemeAuthor.c_str());
+            Gfx::Print(-4, 2, "Installing %s by %s...\nThis may take time, do not turn off your Wii U.", mThemeName.c_str(), mThemeAuthor.c_str());
             break;
         case MENU_STATE_THEME_INSTALL_SUCCESS:
             Gfx::SetBackgroundColour(BACKGROUND_SUCCESS_COLOUR);
