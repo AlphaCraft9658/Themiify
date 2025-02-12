@@ -50,12 +50,12 @@ void InstallThemeScreen::Draw()
             break;
         }
         case MENU_STATE_INSTALL_THEME_PROMPT:
-            if (!mMenuStateFailure & !mThemeRegionMismatch & !mThemeAlreadyInstalled) {
+            if (!mMenuStateFailure & !mThemeRegionMismatch & !IsThemeAlreadyInstalled()) {
                 Gfx::SetBackgroundColour(BACKGROUND_COLOUR);
                 Gfx::Print(-4, 2, "You will now install: %s\nas an SDCafiine modpack.\n\nWould you like to continue with the installation?", mThemeName.c_str());
                 Gfx::Print(-4, 17, "            A - Yes                              B - No");
             }
-            else if (mThemeAlreadyInstalled) {
+            else if (IsThemeAlreadyInstalled()) {
                 Gfx::SetBackgroundColour(BACKGROUND_WARNING_COLOUR);
                 Gfx::Print(-4, 2, "Warning!\n\nThis theme is already installed as the modpack:\n%s\n\nWould you like to reinstall it?", mThemeID.c_str());
                 Gfx::Print(-4, 17, "            A - Yes                              B - No");
@@ -159,7 +159,6 @@ bool InstallThemeScreen::Update(VPADStatus status)
                 mMenuStateFailure = true;
             }
 
-            mThemeAlreadyInstalled = false;
             mThemeRegionMismatch = false;
 
             mThemeID = mThemeData.themeID;
@@ -170,12 +169,8 @@ bool InstallThemeScreen::Update(VPADStatus status)
             if ((mThemeRegion != mSystemRegion) & (mThemeRegion != Installer::Region::UNIVERSAL)) {
                 mThemeRegionMismatch = true;
             }
-
-            if (IsThemeAlreadyInstalled()) {
-                mThemeAlreadyInstalled = true;
-            }
             
-            if (!mMenuStateFailure | mThemeRegionMismatch | mThemeAlreadyInstalled) {
+            if (!mMenuStateFailure | mThemeRegionMismatch | IsThemeAlreadyInstalled()) {
                 if (status.trigger & VPAD_BUTTON_A) {
                     Gfx::SetBackgroundColour(BACKGROUND_COLOUR);
                     mMenuState = MENU_STATE_INSTALLING_THEME;
@@ -239,20 +234,20 @@ std::string InstallThemeScreen::RegionToString(Installer::Region region)
 
 bool InstallThemeScreen::IsThemeAlreadyInstalled()
 {
-    if (!mThemeAlreadyInstalled) {
-        std::string themeInstallPath = std::string(THEMIIFY_INSTALLED_THEMES) + "/" + mThemeID + ".json";
+    std::string themeInstallPath = std::string(THEMIIFY_INSTALLED_THEMES) + "/" + mThemeID + ".json";
+    Installer::installed_theme_data themeData;
 
-        std::FILE *themeInstallFile;
-        // For now just gonna do it like this
-        // Maybe in the future we could actually parse the json for the install path and check if that exists on the sd
-        if (!(themeInstallFile = std::fopen(themeInstallPath.c_str(), "rb"))) {
-            std::fclose(themeInstallFile);
+    if (std::filesystem::exists(themeInstallPath)) {
+        Installer::GetInstalledThemeMetadata(themeInstallPath, &themeData);
+        if (std::filesystem::exists(themeData.installedThemePath)) {
+            return true;
+        }
+        else {
+            // Json exists but modpack doesn't so lets just delete the modpack
+            DeletePath(themeInstallPath);
             return false;
         }
-
-        std::fclose(themeInstallFile);
-        return true;
     }
 
-    return true;
+    return false;
 }

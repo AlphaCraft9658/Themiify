@@ -28,3 +28,28 @@ inline bool CreateParentDirectories(std::string inputPath) {
 
     return true;
 }
+
+inline void DeletePath(std::string inputPath) {
+    if (!std::filesystem::exists(inputPath)) {
+        WHBLogPrintf("%s could not be found!", inputPath.c_str());
+        return;
+    }
+
+    if (std::filesystem::is_directory(inputPath)) {
+        for (const auto& entry : std::filesystem::directory_iterator(inputPath)) {
+            DeletePath(entry.path());
+            WHBLogPrintf("Successfully deleted %s", entry.path().c_str());
+        }
+    }
+    else {
+        WHBLogPrintf("Deleting %s...", inputPath.c_str());
+    }
+
+    try {
+        std::filesystem::remove(inputPath);
+    }
+    catch (const std::filesystem::filesystem_error& e) {
+        WHBLogPrintf("Error deleting... Error: %s", e.what());
+        return;
+    }
+}

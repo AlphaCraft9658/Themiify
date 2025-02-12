@@ -19,7 +19,9 @@ private:
         MENU_STATE_INIT,
         MENU_STATE_DIR_ITERATOR,
         MENU_STATE_DEFAULT,
-        MENU_STATE_THEME_SHOW_DETAILS
+        MENU_STATE_THEME_SHOW_DETAILS,
+        MENU_STATE_DELETE_THEME_PROMPT,
+        MENU_STATE_THEME_DELETED
     };
 
     std::string RegionToString(std::string region);

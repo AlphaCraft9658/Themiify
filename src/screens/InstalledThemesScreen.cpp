@@ -43,7 +43,8 @@ void InstalledThemesScreen::Draw()
 
             break;
         case MENU_STATE_DEFAULT: {
-            Gfx::Print(-3, 2, "Select a theme to view information about it");
+            Gfx::SetBackgroundColour(BACKGROUND_COLOUR);
+            Gfx::Print(-3, 2, "Select a theme to view information about it or uninstall it");
 
             int yIni = 4;
             for (std::size_t i = 0; i < 12 && (mScrollOffset + i) < mFileList.size(); i++) {
@@ -56,15 +57,40 @@ void InstalledThemesScreen::Draw()
             break;            
         }
         case MENU_STATE_THEME_SHOW_DETAILS:
+            Gfx::SetBackgroundColour(BACKGROUND_COLOUR);
             // TODO: Figure out the "select default theme" appraoch we're gonna do
-            // TODO: Should also maybe add a feature to uninstall mods (Would delete the modpack path exposed by the json and then the json itself)
             Gfx::Print(-4, 2, "Theme Details:");
             Gfx::Print(-3, 4, "Theme Name: %s\nTheme Author: %s\nTheme Region: %s\nTheme ID: %s\n\nTheme was installed to:\n%s", mSelectedThemeData.themeName.c_str(), mSelectedThemeData.themeAuthor.c_str(), RegionToString(mSelectedThemeData.themeRegion).c_str(), mSelectedThemeData.themeID.c_str(), mSelectedThemeData.installedThemePath.c_str());
-            Gfx::Print(-4, 17, "                             B - Back");
+            Gfx::Print(-4, 17, "          X - Uninstall Theme                    B - Back");
 
             break;
+        case MENU_STATE_DELETE_THEME_PROMPT:
+            Gfx::SetBackgroundColour(BACKGROUND_WARNING_COLOUR);
+
+            Gfx::Print(-4, 2, "Warning!\n\nProceeding will delete the theme:\n%s\nfrom your SD Card.\n\nThis includes both its SDCafiine modpack, located at:\n%s\nand any metadata saved by Themiify.\n\nWould you like to proceed with the uninstallation?", mSelectedThemeData.themeName.c_str(), mSelectedThemeData.installedThemePath.c_str());
+            Gfx::Print(-4, 17, "          A - Uninstall Theme                    B - Back");
+
+            break;
+        case MENU_STATE_THEME_DELETED:
+            if (mMenuStateFailure) {
+                Gfx::SetBackgroundColour(BACKGROUND_ERR_COLOUR);
+
+                Gfx::Print(-4, 2, "Error uninstalling %s\nPossible sign of SD Card corruption...\n\nYou may have to manually delete the theme yourself.", mSelectedThemeData.themeName.c_str());
+                Gfx::Print(-4, 17, "                             B - Back");
+            }
+            else {
+                Gfx::SetBackgroundColour(BACKGROUND_SUCCESS_COLOUR);
+
+                Gfx::Print(-4, 2, "Successfully uninstalled the theme:\n%s", mSelectedThemeData.themeName.c_str());
+                Gfx::Print(-4, 17, "                          A/B - Continue");
+            }
+
+            break;
+
     }
 }
+
+bool deleteRes;
 
 bool InstalledThemesScreen::Update(VPADStatus status)
 {   
@@ -76,7 +102,6 @@ bool InstalledThemesScreen::Update(VPADStatus status)
             mMenuState = MENU_STATE_DIR_ITERATOR;
             break;
         case MENU_STATE_DIR_ITERATOR:
-
             mFileList.clear();
 
             for (const auto & entry : std::filesystem::directory_iterator(THEMIIFY_INSTALLED_THEMES)) {
@@ -89,14 +114,22 @@ bool InstalledThemesScreen::Update(VPADStatus status)
                 mNoInstalledThemesFound = true;    
             }
 
-            for (std::size_t i = 0; i < mFileList.size(); i++) {
-                if ((Installer::GetInstalledThemeMetadata(mFileList.at(i), &themeData)) == 0) {
+            for (auto list = mFileList.begin(); list != mFileList.end(); ) {
+                if ((Installer::GetInstalledThemeMetadata(*list, &themeData)) == 0) {
                     mMenuStateFailure = true;
                     break;
                 }
-                // NOTE: A lot of cases where someone could have, for example, deleted the sdcafiine directory. Need to check for stuff like that
-                mThemeDataList.push_back(themeData);
-                mThemeNames.push_back(themeData.themeName);
+
+                if (!std::filesystem::exists(themeData.installedThemePath)) {
+                    // Modpack doesn't exist so we should delete the json because the user "uninstalled" the theme themselves
+                    DeletePath(*list);
+                    list = mFileList.erase(list);
+                }
+                else {
+                    mThemeDataList.push_back(themeData);
+                    mThemeNames.push_back(themeData.themeName);
+                    list++;
+                }  
             }
 
             if (!mMenuStateFailure & !mNoInstalledThemesFound) {
@@ -108,6 +141,8 @@ bool InstalledThemesScreen::Update(VPADStatus status)
                     return false;
                 }
             }
+
+            break;
         case MENU_STATE_DEFAULT:
             if (status.trigger & (VPAD_STICK_L_EMULATION_UP | VPAD_BUTTON_UP)) {
                 mThemeIdx--;
@@ -142,6 +177,36 @@ bool InstalledThemesScreen::Update(VPADStatus status)
         case MENU_STATE_THEME_SHOW_DETAILS:
             if (status.trigger & VPAD_BUTTON_B) {
                 mMenuState = MENU_STATE_DIR_ITERATOR;
+            }
+            else if (status.trigger & VPAD_BUTTON_X) {
+                mMenuState = MENU_STATE_DELETE_THEME_PROMPT;
+            }
+
+            break;
+        case MENU_STATE_DELETE_THEME_PROMPT:
+            if (status.trigger & VPAD_BUTTON_A) {
+                deleteRes = Installer::DeleteTheme(mSelectedThemeData.installedThemePath, mFileList.at(mThemeIdx));
+                mMenuState = MENU_STATE_THEME_DELETED;
+            }
+            else if (status.trigger & VPAD_BUTTON_B) {
+                mMenuState = MENU_STATE_THEME_SHOW_DETAILS;
+            }
+
+            break;
+        case MENU_STATE_THEME_DELETED:
+            if (!deleteRes) {
+                mMenuStateFailure = true;
+            }    
+
+            if (mMenuStateFailure) {
+                if (status.trigger & VPAD_BUTTON_B) {
+                    mMenuState = MENU_STATE_DIR_ITERATOR;
+                }
+            }
+            else {
+                if (status.trigger & (VPAD_BUTTON_A | VPAD_BUTTON_B)) {
+                    return false;
+                }
             }
 
             break;
