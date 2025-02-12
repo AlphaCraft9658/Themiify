@@ -321,7 +321,6 @@ namespace Installer {
                 WHBLogPrintf("Patch failed. Hips result: %d", result);
 
                 themeInstallSuccess = false;
-
                 break;
             }
         }
@@ -330,8 +329,9 @@ namespace Installer {
 
         zip_close(themeArchive);
 
+        std::string installPath = std::string(THEMIIFY_INSTALLED_THEMES) + "/" + themeData.themeID + ".json";
+
         if (themeInstallSuccess) {
-            std::string installPath = std::string(THEMIIFY_INSTALLED_THEMES) + "/" + themeData.themeID + ".json";
             WHBLogPrintf("Install Path: %s", installPath.c_str());
             CreateParentDirectories(installPath);
             json::json installedThemeJson;
@@ -357,14 +357,22 @@ namespace Installer {
             installedThemeJson.clear();
         }
         else {
-            try {
-                std::filesystem::remove_all(modpackPath);
-            }
-            catch (const std::filesystem::filesystem_error& e) {
-                WHBLogPrintf("Error removing directory: %s", e.what());
-            }
+            // In case the theme was somehow already installed
+            // Would prolly also happen if two themes use the same theme id but one is broken... Not sure how I feel about that one but we'll have to see
+            DeleteTheme(modpackPath, installPath);
         }
 
         return themeInstallSuccess;
+    }
+
+    bool DeleteTheme(std::string modpackPath, std::string installPath) {
+        DeletePath(modpackPath);
+        DeletePath(installPath);
+
+        if (std::filesystem::exists(modpackPath) & std::filesystem::exists(installPath)) {
+            return false;
+        }
+
+        return true;
     }
 }

@@ -32,9 +32,7 @@ private:
     bool IsThemeAlreadyInstalled();
 
     MenuState mMenuState;
-    bool mMenuStateFailure;
-    bool mThemeRegionMismatch;
-    bool mThemeAlreadyInstalled;
+    bool mMenuStateFailure, mThemeRegionMismatch;
 
     int mFileIdx, mScrollOffset;
 
