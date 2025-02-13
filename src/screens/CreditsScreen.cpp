@@ -1,6 +1,3 @@
-#include <cstdalign>
-#include <cmath>
-
 #include "gfx.h"
 #include "utils.h"
 #include "CreditsScreen.h"
@@ -18,7 +15,7 @@ void CreditsScreen::Draw()
     ColourLoop();
     
     Gfx::Print(-4, 2,"Themiify Credits:");
-    Gfx::Print(-3, 4, "Programming: Fangal-Airbag & AlphaCraft9658\nIcons: Perrohuevo");
+    Gfx::Print(-3, 4, "Programming: Fangal-Airbag & AlphaCraft9658\nIcons: Perrohuevo & dewgong");
     Gfx::Print(-4, 7, "Special thanks to:");
     Gfx::Print(-3, 9, "The Theme Cafe Discord mods, devs and founders!\nAll the amazing theme creators!");
     Gfx::Print(-4, 17, "                             B - Back");

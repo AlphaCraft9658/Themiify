@@ -1,5 +1,3 @@
-#include <whb/log.h>
-
 #include "gfx.h"
 #include "utils.h"
 
