@@ -1,8 +1,5 @@
 #include <memory>
 
-#include <coreinit/debug.h>
-#include <coreinit/time.h>
-#include <coreinit/thread.h>
 #include <vpad/input.h>
 #include <sndcore2/core.h>
 #include <sysapp/launch.h>

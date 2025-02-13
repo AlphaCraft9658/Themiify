@@ -1,8 +1,6 @@
 #include <filesystem>
 #include <vector>
 
-#include <whb/log.h>
-
 #include "gfx.h"
 #include "installer.h"
 #include "utils.h"
@@ -110,10 +108,6 @@ bool InstalledThemesScreen::Update(VPADStatus status)
                 }
             }
 
-            if (mFileList.size() == 0) {
-                mNoInstalledThemesFound = true;    
-            }
-
             for (auto list = mFileList.begin(); list != mFileList.end(); ) {
                 if ((Installer::GetInstalledThemeMetadata(*list, &themeData)) == 0) {
                     mMenuStateFailure = true;
@@ -128,8 +122,12 @@ bool InstalledThemesScreen::Update(VPADStatus status)
                 else {
                     mThemeDataList.push_back(themeData);
                     mThemeNames.push_back(themeData.themeName);
-                    list++;
+                    ++list;
                 }  
+            }
+
+            if (mFileList.size() == 0) {
+                mNoInstalledThemesFound = true;    
             }
 
             if (!mMenuStateFailure & !mNoInstalledThemesFound) {

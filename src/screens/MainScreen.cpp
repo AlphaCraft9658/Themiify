@@ -23,8 +23,7 @@ void MainScreen::Draw()
 {
     Gfx::Clear(Gfx::GetBackgroundColour());
 
-    // NOTE: in the future maybe we could add version numbers here and in the credits section?
-    Gfx::Print(-4, -1, "Themiify - A Wii U Theme Installer\n-------------------------------------------------------");
+    Gfx::Print(-4, -1, "Themiify - A Wii U Theme Installer - %s\n-------------------------------------------------------", THEMIIFY_VERSION);
 
     if (mMenuScreen) {
         mMenuScreen->Draw();

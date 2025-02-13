@@ -1,8 +1,5 @@
 #include <filesystem>
 
-#include <coreinit/time.h>
-#include <coreinit/thread.h>
-
 #include "gfx.h"
 #include "installer.h"
 #include "InstallThemeScreen.h"
@@ -40,7 +37,7 @@ void InstallThemeScreen::Draw()
             Gfx::Print(-3, 2, "Select a theme to install");
             
             int yIni = 4;
-            for (std::size_t i = 0; i < 12 && (mScrollOffset + i) < mFileList.size(); i++) {
+            for (std::size_t i = 0; i < 12 && (mScrollOffset + i) < mFileList.size(); ++i) {
                 int y = yIni + i;
                 std::size_t fileIdx = mScrollOffset + i;
                 Gfx::Print(-4, y, (mFileIdx == static_cast<int>(fileIdx)) ? "> %s" : "  %s", mFileList.at(fileIdx).c_str());
@@ -77,8 +74,8 @@ void InstallThemeScreen::Draw()
             break;
         case MENU_STATE_THEME_INSTALL_SUCCESS:
             Gfx::SetBackgroundColour(BACKGROUND_SUCCESS_COLOUR);
-            Gfx::Print(-4, 2, "Successfully installed %s!\n\nModpack name: %s", mThemeName.c_str(), mThemeID.c_str());
-            Gfx::Print(-4, 17, "                          A/B - Continue");
+            Gfx::Print(-4, 2, "Successfully installed %s!\n\nModpack name: %s\n\nTo save storage space, it is reccomended to delete\nthe original theme file: %s\n\nWould you like to delete the file?", mThemeName.c_str(), mThemeID.c_str(), mSelectedPathShort.c_str());
+            Gfx::Print(-4, 17, "          X - Delete                              B - No");
             break;
         case MENU_STATE_THEME_INSTALL_ERROR:
             Gfx::SetBackgroundColour(BACKGROUND_ERR_COLOUR);
@@ -195,7 +192,11 @@ bool InstallThemeScreen::Update(VPADStatus status)
             mMenuState = MENU_STATE_THEME_INSTALL_SUCCESS;
             break;
         case MENU_STATE_THEME_INSTALL_SUCCESS:
-            if (status.trigger & (VPAD_BUTTON_A | VPAD_BUTTON_B)) {
+            if (status.trigger & VPAD_BUTTON_X) {
+                DeletePath(mSelectedPath);
+                return false;
+            }
+            else if (status.trigger & VPAD_BUTTON_B) {
                 mMenuState = MENU_STATE_DIR_ITERATOR;
             }
             break;
@@ -243,7 +244,7 @@ bool InstallThemeScreen::IsThemeAlreadyInstalled()
             return true;
         }
         else {
-            // Json exists but modpack doesn't so lets just delete the modpack
+            // Json exists but modpack doesn't so let's just delete the modpack
             DeletePath(themeInstallPath);
             return false;
         }

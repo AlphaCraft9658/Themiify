@@ -3,7 +3,6 @@
 #include <memory>
 #include <vector>
 #include <fstream>
-#include <tuple>
 
 #include <zip.h>
 #include <nlohmann/json.hpp>
