@@ -194,7 +194,7 @@ bool InstallThemeScreen::Update(VPADStatus status)
         case MENU_STATE_THEME_INSTALL_SUCCESS:
             if (status.trigger & VPAD_BUTTON_X) {
                 DeletePath(mSelectedPath);
-                return false;
+                mMenuState = MENU_STATE_DIR_ITERATOR;
             }
             else if (status.trigger & VPAD_BUTTON_B) {
                 mMenuState = MENU_STATE_DIR_ITERATOR;

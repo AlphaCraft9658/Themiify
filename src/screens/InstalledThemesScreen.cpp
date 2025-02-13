@@ -108,21 +108,21 @@ bool InstalledThemesScreen::Update(VPADStatus status)
                 }
             }
 
-            for (auto list = mFileList.begin(); list != mFileList.end(); ) {
-                if ((Installer::GetInstalledThemeMetadata(*list, &themeData)) == 0) {
+            for (auto listIt = mFileList.begin(); listIt != mFileList.end(); ) {
+                if ((Installer::GetInstalledThemeMetadata(*listIt, &themeData)) == 0) {
                     mMenuStateFailure = true;
                     break;
                 }
 
                 if (!std::filesystem::exists(themeData.installedThemePath)) {
                     // Modpack doesn't exist so we should delete the json because the user "uninstalled" the theme themselves
-                    DeletePath(*list);
-                    list = mFileList.erase(list);
+                    DeletePath(*listIt);
+                    listIt = mFileList.erase(listIt);
                 }
                 else {
                     mThemeDataList.push_back(themeData);
                     mThemeNames.push_back(themeData.themeName);
-                    ++list;
+                    ++listIt;
                 }  
             }
 
@@ -203,7 +203,7 @@ bool InstalledThemesScreen::Update(VPADStatus status)
             }
             else {
                 if (status.trigger & (VPAD_BUTTON_A | VPAD_BUTTON_B)) {
-                    return false;
+                    mMenuState = MENU_STATE_DIR_ITERATOR;
                 }
             }
 
