@@ -1,0 +1,7 @@
+FROM devkitpro/devkitppc:latest
+
+RUN ["apt", "update"]
+RUN ["apt", "install", "clang", "-y"]
+RUN ["dkp-pacman", "-Syu", "--noconfirm"]
+RUN ["dkp-pacman", "-S", "ppc-libzip", "--noconfirm"]
+COPY --from=ghcr.io/wiiu-env/libmocha:20240603 /artifacts $DEVKITPRO

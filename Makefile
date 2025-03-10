@@ -15,7 +15,7 @@ TOPDIR ?= $(CURDIR)
 #-------------------------------------------------------------------------------
 APP_NAME		:= Themiify
 APP_SHORTNAME	:= Themiify
-APP_AUTHOR		:= Fangal_Airbag & AlphaCraft
+APP_AUTHOR		:= Fangal_Airbag & Alpha-Craft
 
 include $(DEVKITPRO)/wut/share/wut_rules
 
@@ -30,7 +30,7 @@ include $(DEVKITPRO)/wut/share/wut_rules
 # TV_SPLASH is the image displayed during bootup on the TV, leave blank to use default rule
 # DRC_SPLASH is the image displayed during bootup on the DRC, leave blank to use default rule
 #-------------------------------------------------------------------------------
-TARGET		:=	$(notdir $(CURDIR))
+TARGET		:=	Themiify
 BUILD		:=	build
 SOURCES		:=	src src/screens
 DATA		:=	data
@@ -48,7 +48,7 @@ CFLAGS	:=	-g -Wall -O2 -ffunction-sections \
 
 CFLAGS	+=	$(INCLUDE) -D__WIIU__ -D__WUT__
 
-CXXFLAGS	:= $(CFLAGS)
+CXXFLAGS	:= -std=gnu++23 $(CFLAGS)
 
 ASFLAGS	:=	-g $(ARCH)
 LDFLAGS	=	-g $(ARCH) $(RPXSPECS) -Wl,-Map,$(notdir $*.map)
