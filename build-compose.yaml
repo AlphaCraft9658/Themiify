@@ -2,13 +2,11 @@ services:
   devkitpro:
     build:
       context: .
-      dockerfile: ./devcontainer_dockerfile
+      dockerfile: ./build_dockerfile
     container_name: devkitpro
-    ports:
-      - 4405:4405/udp
+    # ports:
+    #   - 4405:4405/udp
     volumes:
       - .:/workspace:cached
-      - ../Themiify-ui:/workspace-ui:cached
-      - ../Themiify-fangal:/workspace-fangal:cached
     command: make
     # command: /bin/sh -c "while sleep 1000; do :; done"
