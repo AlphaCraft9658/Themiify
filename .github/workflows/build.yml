@@ -20,7 +20,7 @@ jobs:
       uses: docker/setup-compose-action@v1.2.0
     - name: Execute build
       run:
-        docker compose -f build-compose.yaml up --abort-on-container-exit
+        docker compose -f ${PWD}/build-compose.yaml up --abort-on-container-exit
     - uses: actions/upload-artifact@v4
       with:
         name: Themiify.wuhb
