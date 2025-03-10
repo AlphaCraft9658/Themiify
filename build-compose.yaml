@@ -7,6 +7,6 @@ services:
     # ports:
     #   - 4405:4405/udp
     volumes:
-      - .:/workspace:cached
-    command: make
+      - .:/project:cached
+    command: make -C /project
     # command: /bin/sh -c "while sleep 1000; do :; done"
