@@ -1,23 +1,6 @@
-.devcontainer
-.github
-.vscode
-1698712517766.png
-1698713038249.png
+/.vscode
+/build
+
 *.elf
 *.rpx
-docker-compose.yaml
-*.excalidraw
-Themiify logic.svg
-brush-solid.svg
-palette-solid.svg
-build
-bps_patcher.zip
-themiify.lst
-bashrc
-devcontainer_dockerfile
-devcontainer-compose.yaml
-testing_files
 *.wuhb
-*.lst
-VSCode-Config.zip
-workspace.code-workspace
