@@ -1,9 +1,0 @@
-/*.a
-/build
-*.bz2
-release/
-lib/
-CMakeLists.txt
-.idea/
-cmake-build-debug/
-share/
