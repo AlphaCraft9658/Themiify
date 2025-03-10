@@ -3,16 +3,23 @@ on:
   push:
     branches:
     - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build:
     name: Deploy stable builds
     runs-on: ubuntu-24.04
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
     - name: Execute build
       run: docker compose -f build-compose.yaml up --abort-on-container-exit
-    - uses: actions/upload-artifact@v4
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
       with:
         name: Themiify.wuhb
         path: ./Themiify.wuhb
