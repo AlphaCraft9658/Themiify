@@ -13,9 +13,9 @@ TOPDIR ?= $(CURDIR)
 # APP_SHORTNAME sets the short name of the application
 # APP_AUTHOR sets the author of the application
 #-------------------------------------------------------------------------------
-#APP_NAME	:= Application Name
-#APP_SHORTNAME	:= App Name
-#APP_AUTHOR	:= Built with devkitPPC & wut
+APP_NAME		:= Themiify
+APP_SHORTNAME	:= Themiify
+APP_AUTHOR		:= Fangal_Airbag & Alpha-Craft
 
 include $(DEVKITPRO)/wut/share/wut_rules
 
@@ -32,13 +32,13 @@ include $(DEVKITPRO)/wut/share/wut_rules
 #-------------------------------------------------------------------------------
 TARGET		:=	Themiify
 BUILD		:=	build
-SOURCES		:=	src include include/utils
+SOURCES		:=	src src/screens
 DATA		:=	data
-INCLUDES	:=	include
+INCLUDES	:=	include include/screens
 CONTENT		:=
-ICON		:=
-TV_SPLASH	:=
-DRC_SPLASH	:=
+ICON		:=	meta/icon.png
+TV_SPLASH	:=	meta/tv-splash.png
+DRC_SPLASH	:=	meta/drc-splash.png
 
 #-------------------------------------------------------------------------------
 # options for code generation
@@ -60,7 +60,6 @@ LIBS	:= -lwut -lmocha -lzip -lz -lbz2
 # containing include and lib
 #-------------------------------------------------------------------------------
 LIBDIRS	:= $(PORTLIBS) $(WUT_ROOT) $(WUT_ROOT)/usr
-
 
 #-------------------------------------------------------------------------------
 # no real need to edit anything past this point unless you need to add additional
