@@ -13,3 +13,11 @@ palette-solid.svg
 build
 bps_patcher.zip
 themiify.lst
+bashrc
+devcontainer_dockerfile
+devcontainer-compose.yaml
+testing_files
+*.wuhb
+*.lst
+VSCode-Config.zip
+workspace.code-workspace
