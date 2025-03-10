@@ -1,7 +1,6 @@
 FROM devkitpro/devkitppc:latest
 
 RUN ["apt", "update"]
-RUN ["apt", "upgrade", "-y"]
 RUN ["apt", "install", "clang", "-y"]
 RUN ["dkp-pacman", "-Syu", "--noconfirm"]
 RUN ["dkp-pacman", "-S", "ppc-libzip", "--noconfirm"]
