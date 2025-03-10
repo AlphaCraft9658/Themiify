@@ -1,5 +1,6 @@
-[![CI-Release](https://github.com/Themiify-hb/Themiify/actions/workflows/build-release.yml/badge.svg)](https://github.com/Themiify-hb/Themiify/actions/workflows/build-release.yml)  [![CI-Develop](https://github.com/Themiify-hb/Themiify/actions/workflows/build-dev.yml/badge.svg?branch=dev)](https://github.com/Themiify-hb/Themiify/actions/workflows/build-dev.yml)
 # Themiify
+[![CI-Release](https://github.com/Themiify-hb/Themiify/actions/workflows/build-release.yml/badge.svg)](https://github.com/Themiify-hb/Themiify/actions/workflows/build-release.yml)  [![CI-Develop](https://github.com/Themiify-hb/Themiify/actions/workflows/build-dev.yml/badge.svg?branch=dev)](https://github.com/Themiify-hb/Themiify/actions/workflows/build-dev.yml)
+
 A new WIP theme manager for the Wii U console
 
 (This theme manager will be started soon and is in very early stages, so it will not work for a while at all)
