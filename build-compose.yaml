@@ -1,0 +1,12 @@
+services:
+  devkitpro:
+    build:
+      context: .
+      dockerfile: ./build_dockerfile
+    container_name: devkitpro
+    # ports:
+    #   - 4405:4405/udp
+    volumes:
+      - .:/workspace:cached
+    command: make
+    # command: /bin/sh -c "while sleep 1000; do :; done"
