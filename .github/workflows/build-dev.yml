@@ -1,18 +1,26 @@
 name: CI-Develop
+
 on:
   push:
     branches:
-    - dev
+      - dev
+  pull_request:
+    branches:
+      - dev
 
 jobs:
   build:
     name: Deploy development builds
     runs-on: ubuntu-24.04
     steps:
-    - uses: actions/checkout@v4
-    - name: Execute build
-      run: docker compose -f build-compose.yaml up --abort-on-container-exit
-    - uses: actions/upload-artifact@v4
-      with:
-        name: Themiify-dev.wuhb
-        path: ./Themiify.wuhb
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Execute build
+        run: docker compose -f build-compose.yaml up --abort-on-container-exit
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Themiify-dev.wuhb
+          path: ./Themiify.wuhb
