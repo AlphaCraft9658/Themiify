@@ -10,14 +10,15 @@ jobs:
     name: Deploy stable builds
     runs-on: ubuntu-24.04
     steps:
-    - name: Docker Setup Docker
+    - uses: actions/checkout@v4
+#    - name: Docker Setup Docker
   # You may pin to the exact commit or the version.
   # uses: docker/setup-docker-action@c2d73c1a11a9b44be6d855121d75c3e0dac814c1
-      uses: docker/setup-docker-action@v4.2.0
-    - name: Docker Setup Compose
+#      uses: docker/setup-docker-action@v4.2.0
+#    - name: Docker Setup Compose
       # You may pin to the exact commit or the version.
       # uses: docker/setup-compose-action@364cc21a5de5b1ee4a7f5f9d3fa374ce0ccde746
-      uses: docker/setup-compose-action@v1.2.0
+#      uses: docker/setup-compose-action@v1.2.0
     - name: Display files in working directory (debug)
       run:
         ls
