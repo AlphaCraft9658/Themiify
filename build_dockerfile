@@ -6,5 +6,5 @@ RUN ["apt", "install", "clang", "-y"]
 RUN ["dkp-pacman", "-Syu", "--noconfirm"]
 RUN ["dkp-pacman", "-S", "ppc-libzip", "--noconfirm"]
 COPY libmocha /tmp/libmocha
-ls /tmp/libmocha
+RUN ["ls", "/tmp/libmocha"]
 RUN ["make", "install", "-C", "/tmp/libmocha"]
