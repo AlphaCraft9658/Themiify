@@ -1,12 +1,12 @@
-name: CI-Release
+name: PR-Release
 on:
-  push:
+  pull_request:
     branches:
-    - main
+      - main
 
 jobs:
   build:
-    name: Deploy stable builds
+    name: Deploy stable builds (upon pull request)
     runs-on: ubuntu-24.04
     steps:
     - name: Checkout repository
