@@ -11,7 +11,7 @@ This theme manager will be available as a .wuhb file and utilize SDCafiine for a
 ## Clone the repository
 In order to clone the dev branch of the repository for compiling or contributing you will need to run the following command:
 ```
-git clone -b dev --recurse-submodules https://github.com/AlphaCraft9658/Themiify
+git clone -b dev https://github.com/AlphaCraft9658/Themiify
 ```
 
 ## Get the latest test build
