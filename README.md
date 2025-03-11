@@ -3,14 +3,26 @@
 
 A new WIP theme manager for the Wii U console
 
-## Idea
-This theme manager will be available as a .wuhb file and utilize SDCafiine for applying themes. There is a planned patch to add a feature to SDCafiine to better auto-load modpacks or themes in this case.
-
-## Clone the repository
-In order to clone the dev branch of the repository for compiling or contributing you will need to run the following command:
-```
-git clone -b dev https://github.com/AlphaCraft9658/Themiify
-```
+## TODO
+This list is comprised of a couple accomplishments and ideas for future updates, but is not final and contents may added or removed at any point in time.
+- [x] Implement patching functionality
+- [x] Implement a working UI for patching and managing local themes
+  - [ ] Rework UI to use proper graphics libraries like SDL
+    - [ ] Local theme manager
+    - [ ] Settings page
+    - [ ] Theme browser
+    - [ ] Credits & About
+    - [ ] Further UI elements ( to be extended )
+- [ ] Final decision on whether to endorse SDCafiine or StyleMiiU
+  - [ ] In case of SDCafiine: Get option for favorite modpack/theme selection to be implemented
+- [ ] Implement online functionality
+  - [ ] Browse online themes
+  - [ ] Install online themes
+  - [ ] Update online themes
+  - [ ] Option to auto-update themes when launching Themiify
+  - [ ] Option to select whether metadata and the theme list should be fetched from the theme repo automatically (e.g. when opening Themiify or the theme browser) or only manually
+  - [ ] Version locking for themes (idea: if a theme that is available online is further modified by the user while retaining its metadata, they may want to keep Themiify from updating it)
+- [ ] Add notes about reproducible Docker-based VSCode development environment
 
 ## Get the latest test build
 You can find the latest testing builds in the [GitHub Actions](https://github.com/Themiify-hb/Themiify/actions) at [CI-Release](https://github.com/Themiify-hb/Themiify/actions/workflows/build-release.yml) and [CI-Develop](https://github.com/Themiify-hb/Themiify/actions/workflows/build-dev.yml). But keep in mind that those artifacts expire after 90 days! So until we publish stable builds that are meant for regular use you'll either need to use builds from the GitHub Actions as long as they aren't expired or build the repo yourself.
@@ -20,6 +32,13 @@ You can follow the guides over on the [Theme Café Discord Server](https://disco
 In order to package your theme for use with Themiify you can use the official [utheme-tool](https://github.com/Themiify-hb/utheme-tool) with further instructions on its own repo and in the actual application.
 
 > **NOTE:** [utheme-tool](https://github.com/Themiify-hb/utheme-tool) is still in development, so expect bugs and don't be afraid of reporting any issues you experience with it.
+
+## Clone the repository
+
+In order to clone the dev branch of the repository for compiling or contributing you will need to run the following command:
+```
+git clone -b dev https://github.com/AlphaCraft9658/Themiify
+```
 
 ## Building Themiify
 ### Using make
@@ -52,6 +71,3 @@ Optionally run this afterwards, to clean up any possible dangling containers:
 ```
 docker compose -f build-compose.yaml down
 ```
-
-### TODO
-Add notes about reproducible Docker-based VSCode development environment
