@@ -19,7 +19,7 @@ You can find the latest testing builds in the [GitHub Actions](https://github.co
 You can follow the guides over on the [Theme Café Discord Server](https://discord.gg/GsdQzbAejT) for creating your own theme.<br/>
 In order to package your theme for use with Themiify you can use the official [utheme-tool](https://github.com/Themiify-hb/utheme-tool) with further instructions on its own repo and in the actual application.
 
-> **NOTE:** The utheme-tool is only made to be *functional* for now and is not a UI masterpiece, so expect bugs and quirks to be present. At the time of writing it's still being actively worked on for further improvements. If you encounter anything unusual, feel free to open an issue on its repo to tell us about it so we can fix it.
+> **NOTE:** [utheme-tool](https://github.com/Themiify-hb/utheme-tool) is still in development, so expect bugs and don't be afraid of reporting any issues you experience with it.
 
 ## Building this repo
 ### Using make
