@@ -24,19 +24,36 @@ In order to package your theme for use with Themiify you can use the official [u
 > **NOTE:** The utheme-tool is only made to be *functional* for now and is not a UI masterpiece, so expect bugs and quirks to be present. At the time of writing it's still being actively worked on for further improvements. If you encounter anything unusual, feel free to open an issue on its repo to tell us about it so we can fix it.
 
 ## Building this repo
-While it is possible to manually install dependencies and build the repo with the Makefile, it's easier with the official, easily reproducible building container. So when you need to build it yourself when you want to build a specific branch for example, that has no GitHub workflow assigned, you can change your working directory to the root of the repo/branch and run the following command:
+### Using make
+#### Requirements
+- [devkitpro/devkitppc](https://devkitpro.org/wiki/Getting_Started)
+- [libmocha](https://github.com/wiiu-env/libmocha/tree/main)
+#### Building
+Run the following command on the root of the repo:
+```
+make
+```
+You can use wiiload to send the Themiify.wuhb file directly to your Wii U or you can manually place it on the SD-Card once you're done building.
 
+### Using Docker
+If you are at least somewhat familiar with Docker or have it installed on your system, this build method might be easier and quicker to use.<br/>
+#### Requirements
+- [Docker Engine](https://docs.docker.com/engine/install/) or [Docker Desktop](https://docs.docker.com/desktop/)
+- [Docker compose](https://docs.docker.com/compose/install/) - ( If you installed [Docker Engine](https://docs.docker.com/engine/install/) )
+- ( [WSL](https://learn.microsoft.com/en-us/windows/wsl/) or [Hyper-V](https://learn.microsoft.com/en-us/windows-server/virtualization/hyper-v/hyper-v-overview) if you are on Windows<br/>
+*Note: [Docker Desktop](https://docs.docker.com/desktop/setup/install/windows-install/) integrates with [WSL](https://learn.microsoft.com/en-us/windows/wsl/) and [Hyper-V](https://learn.microsoft.com/en-us/windows-server/virtualization/hyper-v/hyper-v-overview),
+but you can also run [Docker Engine](https://docs.docker.com/engine/install/) itself via either of those* )
+
+#### Building
+Run the following command on the root of the repo:
 ```
 docker compose up -f build-compose.yaml up --abort-on-container-exit
 ```
 
-*Optionally run this afterwards, to clean up any possible dangling containers:*
-
+Optionally run this afterwards, to clean up any possible dangling containers:
 ```
 docker compose -f build-compose.yaml down
 ```
-
-> **IMPORTANT NOTE:** If you want to use this method of building the project, you will need to make sure that you have both Docker and Docker Compose installed on your machine, or else it will not work. Docker normally just runs on *Linux* and *MacOS*, so if you want to use this specific building method on Windows, you will need to set up WSL first and then Docker and the repo inside of it. Though the process of setting up and using WSL is beyond the scope of this README.
 
 ### TODO
 Add notes about reproducible Docker-based VSCode development environment
