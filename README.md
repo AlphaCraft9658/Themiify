@@ -46,6 +46,9 @@ git clone -b dev https://github.com/AlphaCraft9658/Themiify
 - [devkitpro/devkitppc](https://devkitpro.org/wiki/Getting_Started)
 - The latest version of [wut](https://github.com/devkitPro/wut)
 - [libmocha](https://github.com/wiiu-env/libmocha/tree/main)
+- `ppc-zlib`, `ppc-libzip`, `ppc-libbzip2` installed via (dkp-)pacman<br/>
+*Note: On Windows you need to do all the building inside of mysys2 which you will need to install for devkitppc as mentioned in the devkitpro wiki*
+
 #### Building
 Run the following command on the root of the repo:
 ```
