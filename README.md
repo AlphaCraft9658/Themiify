@@ -44,6 +44,7 @@ git clone -b dev https://github.com/AlphaCraft9658/Themiify
 ### Using make
 #### Requirements
 - [devkitpro/devkitppc](https://devkitpro.org/wiki/Getting_Started)
+- The latest version of [wut](https://github.com/devkitPro/wut)
 - [libmocha](https://github.com/wiiu-env/libmocha/tree/main)
 #### Building
 Run the following command on the root of the repo:
