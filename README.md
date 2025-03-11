@@ -21,7 +21,7 @@ In order to package your theme for use with Themiify you can use the official [u
 
 > **NOTE:** [utheme-tool](https://github.com/Themiify-hb/utheme-tool) is still in development, so expect bugs and don't be afraid of reporting any issues you experience with it.
 
-## Building this repo
+## Building Themiify
 ### Using make
 #### Requirements
 - [devkitpro/devkitppc](https://devkitpro.org/wiki/Getting_Started)
