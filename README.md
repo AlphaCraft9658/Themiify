@@ -51,10 +51,10 @@ Run the following command on the root of the repo:
 ```
 make
 ```
-You can use wiiload to send the Themiify.wuhb file directly to your Wii U or you can manually place it on the SD-Card once you're done building.
 
 ### Using Docker
 If you are at least somewhat familiar with Docker or have it installed on your system, this build method might be easier and quicker to use.<br/>
+
 #### Requirements
 - [Docker Engine](https://docs.docker.com/engine/install/) or [Docker Desktop](https://docs.docker.com/desktop/)
 - [Docker compose](https://docs.docker.com/compose/install/) - ( If you installed [Docker Engine](https://docs.docker.com/engine/install/) )
@@ -72,3 +72,6 @@ Optionally run this afterwards, to clean up any possible dangling containers:
 ```
 docker compose -f build-compose.yaml down
 ```
+
+### After building
+You can use wiiload to send the Themiify.wuhb file directly to your Wii U or you can manually place it on the SD-Card once you're done building.
