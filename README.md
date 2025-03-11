@@ -15,7 +15,7 @@ git clone -b dev https://github.com/AlphaCraft9658/Themiify
 ```
 
 ## Get the latest test build
-You can find the latest testing builds in the [GitHub Actions](https://github.com/Themiify-hb/Themiify/actions) at [CI-Release](https://github.com/Themiify-hb/Themiify/actions/workflows/build-release.yml) and [CI-Develop](https://github.com/Themiify-hb/Themiify/actions/workflows/build-dev.yml) of this repo or by clicking on the CI-Badges above. But keep in mind that those artifacts expire after 90 days! So until we publish stable builds that are meant for regular use you'll either need to use builds from the GitHub actions or build the repo yourself.
+You can find the latest testing builds in the [GitHub Actions](https://github.com/Themiify-hb/Themiify/actions) at [CI-Release](https://github.com/Themiify-hb/Themiify/actions/workflows/build-release.yml) and [CI-Develop](https://github.com/Themiify-hb/Themiify/actions/workflows/build-dev.yml). But keep in mind that those artifacts expire after 90 days! So until we publish stable builds that are meant for regular use you'll either need to use builds from the GitHub Actions as long as they aren't expired or build the repo yourself.
 
 ## Creating themes
 You can follow the guides over on the [Theme Café Discord Server](https://discord.gg/GsdQzbAejT) for creating your own theme.<br/>
