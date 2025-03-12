@@ -25,7 +25,7 @@ This list is comprised of a couple accomplishments and ideas for future updates,
 - [ ] Add notes about reproducible Docker-based VSCode development environment
 
 ## Get the latest test build
-You can find the latest test builds in the [GitHub Actions](https://github.com/Themiify-hb/Themiify/actions) at [CI-Release](https://github.com/Themiify-hb/Themiify/actions/workflows/build-release.yml) and [CI-Develop](https://github.com/Themiify-hb/Themiify/actions/workflows/build-dev.yml). But keep in mind that those artifacts expire after 90 days! So until we publish stable builds that are meant for regular use you'll either need to use builds from the GitHub Actions as long as they aren't expired or build the repo yourself.
+You can find the latest test builds in the [GitHub Actions](https://github.com/Themiify-hb/Themiify/actions) at [CI-Release](https://github.com/Themiify-hb/Themiify/actions/workflows/build-release.yml) and [CI-Develop](https://github.com/Themiify-hb/Themiify/actions/workflows/build-dev.yml). Though in order to be able to access them you will need to be logged into a GitHub account! You should keep in mind that those artifacts expire after 90 days. So until we publish stable builds that are meant for regular use you'll either need to use builds from the GitHub Actions as long as they aren't expired or build the repo yourself.
 
 ## Creating themes
 You can follow the guides over on the [Theme Café Discord Server](https://discord.gg/GsdQzbAejT) for creating your own theme.<br/>
